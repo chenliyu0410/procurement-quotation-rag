@@ -1,5 +1,6 @@
 # Local learning materials and downloaded examples
 /教材/
+/tmp/
 
 # Secrets
 .env

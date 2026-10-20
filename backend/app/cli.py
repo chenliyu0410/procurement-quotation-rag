@@ -1,10 +1,17 @@
 import argparse
+from pathlib import Path
 
+from qdrant_client import QdrantClient
+
+from app.config import get_settings
 from app.db.session import build_session_factory
 from app.ingestion.data_taipei import parse_csv
 from app.ingestion.http import download
 from app.ingestion.normalize import normalize_metro_tender, normalize_work_bureau
 from app.ingestion.sync_cases import SourceConfig, sync_cases
+from app.ingestion.sync_documents import DocumentSource, sync_document
+from app.retrieval.embeddings import OpenAIEmbeddingProvider
+from app.retrieval.qdrant import QdrantVectorIndex
 
 
 SOURCES = {
@@ -20,7 +27,24 @@ def main() -> None:
     sync.add_argument("--source", required=True, choices=("work-bureau", "metro"))
     sync.add_argument("--resource-url", required=True)
     sync.add_argument("--period", required=True)
+    documents = commands.add_parser("sync-documents")
+    documents.add_argument("path", type=Path)
+    documents.add_argument("--document-id", required=True)
+    documents.add_argument("--source-url", required=True)
+    documents.add_argument("--dimension", type=int, default=1536)
     args = parser.parse_args()
+    if args.command == "sync-documents":
+        settings = get_settings()
+        if not settings.llm_api_key or not settings.embedding_model:
+            parser.error("LLM_API_KEY and EMBEDDING_MODEL are required for sync-documents")
+        content = args.path.read_bytes()
+        mime = "application/pdf" if args.path.suffix.casefold() == ".pdf" else "text/plain"
+        embedder = OpenAIEmbeddingProvider(settings.llm_api_key, settings.embedding_model, args.dimension)
+        vectors = QdrantVectorIndex(QdrantClient(url=settings.qdrant_url, api_key=settings.qdrant_api_key or None))
+        with build_session_factory()() as session:
+            result = sync_document(DocumentSource(args.document_id, args.path.name, mime, content, args.source_url), embedder, vectors, session)
+        print(f"文件同步完成: changed={result.changed}, chunks={result.chunk_count}, collection={result.collection}")
+        return
     name, normalizer, snapshot_mode = SOURCES[args.source]
     content, checksum = download(args.resource_url)
     records = parse_csv(content, normalizer, source_period=args.period, source_url=args.resource_url)
