@@ -16,3 +16,10 @@ async def client() -> AsyncClient:
         base_url="http://test",
     ) as test_client:
         yield test_client
+
+
+@pytest.fixture
+def client_factory():
+    def factory(app):
+        return AsyncClient(transport=ASGITransport(app=app), base_url="http://test")
+    return factory
