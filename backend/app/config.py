@@ -4,10 +4,14 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5432/procurement_rag"
+    database_url: str = "postgresql+psycopg://postgres:postgres@127.0.0.1:55432/procurement_rag"
+    qdrant_url: str = "http://localhost:6333"
+    qdrant_api_key: str = ""
     llm_api_key: str = ""
     llm_model: str = ""
+    embedding_provider: str = "openai"
     embedding_model: str = ""
+    index_schema_version: str = "v1"
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
