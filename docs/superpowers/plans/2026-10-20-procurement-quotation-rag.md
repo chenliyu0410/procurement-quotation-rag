@@ -4,11 +4,13 @@
 
 **Goal:** 建立一個可公開展示的採購與報價知識助理，以 SQL 與向量檢索回答臺北市採購案件、歷史決標金額與採購程序問題，且所有數值及引用可追溯。
 
-**Architecture:** Next.js 前端呼叫 FastAPI；後端將結構化條件送至 PostgreSQL，將語意問題送至 pgvector，合併證據後再交由語言模型生成說明。資料擷取以可重入的管理命令執行，所有金額統計由後端確定性程式計算，模型只能解釋已產生的結果。
+**Architecture:** Next.js 前端呼叫 FastAPI；後端將結構化條件送至 PostgreSQL，將語意問題送至 Qdrant，對直接命中的種子片段做相鄰段落擴展，再交由語言模型生成說明。資料擷取以可重入的管理命令執行，PostgreSQL 保存文件 registry 與同步歷史，Qdrant 以版本化 collections 和確定性 point IDs 支援增量索引。
 
-**Tech Stack:** Python、FastAPI、Pydantic、SQLAlchemy、Alembic、PostgreSQL、pgvector、pytest、Next.js、TypeScript、Vitest、Testing Library、Playwright、Docker Compose。
+**Tech Stack:** Python、FastAPI、Pydantic、SQLAlchemy、Alembic、PostgreSQL、Qdrant、pytest、Next.js、TypeScript、Vitest、Testing Library、Playwright、Docker Compose。
 
 **Spec:** `docs/superpowers/specs/2026-10-20-procurement-quotation-rag-design.md`
+
+**Current state:** Task 1 was completed and pushed before the Qdrant revision. Its baseline Compose file currently uses a pgvector image; Task 2 replaces that service definition with plain PostgreSQL plus Qdrant before any storage implementation continues.
 
 ## Global Constraints
 
@@ -21,18 +23,22 @@
 - 模型與 embedding 金鑰只從後端環境變數讀取。
 - 第一版使用手動、可重入的同步命令，不建置常駐排程器。
 - 第一版不輸出正式報價單，也不宣稱產生可直接投標的建議價格。
+- 案件與文件使用獨立、包含 embedding slug 與 index version 的 Qdrant collections。
+- 同一文件或案件重跑同步不得增加重複 vectors。
+- 對話只保留最近 2 輪，檢索前先將依賴對話的問題改寫成獨立問題。
+- Context 預設 3 個種子片段、前後各 1 個相鄰片段、去重後最多 7 個片段。
 
 ## Review Focus
 
 - 來源 CSV 欄位缺失、名稱變更或金額含逗號時，同步應記錄可診斷錯誤，不得靜默寫入錯誤金額；Task 3 測試。
 - 中文金額條件包含「萬／億」、民國日期或上下限顛倒時，解析應正確或回傳明確驗證錯誤；Task 5 測試。
-- 相似案件少於 5 筆、金額為零或預算與決標值混雜時，不得生成參考區間；Task 7 測試。
+- 相似案件少於 5 筆、金額為零、超過近 5 年或預算與決標值混雜時，不得生成參考區間；Task 7 測試。
 - 模型回傳不存在的 evidence ID 或改寫來源金額時，API 必須拒絕該引用並使用可驗證資料重建回應；Task 8 測試。
-- 外部模型或資料來源逾時時，網站應顯示可重試訊息，已完成的結構化結果仍可呈現；Task 8 與 Task 9 測試。
+- 月度 resource 消失、案件跨期重複或相同文件重複同步時，歷史案件不得誤刪且 Qdrant point 數不得增加；Task 3 與 Task 4 測試。
 
 ---
 
-### Task 1: 建立可啟動的前後端骨架
+### Task 1: 建立可啟動的前後端骨架（已完成）
 
 **Files:**
 - Create: `backend/pyproject.toml`
@@ -72,7 +78,7 @@ def test_health_returns_ok(client):
 
 - [ ] **Step 7: 建立最小首頁及 API base URL 設定，使前端測試通過**
 
-- [ ] **Step 8: 建立 Compose 的 PostgreSQL/pgvector 服務與 `.env.example`，執行 `docker compose config` 確認設定有效**
+- [x] **Step 8: 已建立原始 PostgreSQL/pgvector Compose 基線；新版所需的 Qdrant 轉換移至 Task 2**
 
 - [ ] **Step 9: 執行後端與前端測試，確認全部通過**
 
@@ -83,34 +89,41 @@ git add backend frontend .env.example compose.yaml .gitignore
 git commit -m "chore: scaffold procurement assistant"
 ```
 
-### Task 2: 建立採購案件、文件與同步紀錄資料模型
+### Task 2: 建立採購案件、文件 Registry 與同步紀錄模型
 
 **Files:**
+- Modify: `compose.yaml`
+- Modify: `.env.example`
+- Modify: `backend/pyproject.toml`
+- Modify: `backend/app/config.py`
 - Create: `backend/app/db/session.py`
 - Create: `backend/app/db/models.py`
-- Create: `backend/app/db/types.py`
+- Create: `backend/app/db/identity.py`
 - Create: `backend/alembic.ini`
 - Create: `backend/alembic/env.py`
 - Create: `backend/alembic/versions/0001_initial_schema.py`
 - Create: `backend/tests/db/test_models.py`
 
 **Interfaces:**
-- Produces: `ProcurementCase`、`Document`、`DocumentChunk`、`DataSource`、`SyncRun` ORM models。
+- Produces: `ProcurementCase`、`DocumentRecord`、`DataSource`、`SyncRun` ORM models。
 - Produces: `get_session() -> Iterator[Session]`。
-- `ProcurementCase` 以 `source_dataset + case_id` 唯一識別；金額使用定點 decimal 欄位。
+- Produces: `Settings.qdrant_url`、`Settings.qdrant_api_key`、`Settings.embedding_provider`、`Settings.index_schema_version`。
+- Produces: `build_case_identity(source_dataset, case_number, agency, case_name, year) -> str`。
+- `ProcurementCase` 以穩定 identity 唯一識別，保存 raw/normalized category、source period、source row hash 與 active 狀態；金額使用定點 decimal 欄位。
+- `DocumentRecord` 保存 version hash、chunk count、embedding provider/model、collection 與 indexed_at。
 
-- [ ] **Step 1: 撰寫模型測試，驗證唯一鍵、nullable 預算／決標金額、來源時間與 document chunk 頁碼**
+- [ ] **Step 1: 撰寫設定、模型與 identity 測試，驗證 Qdrant 設定、有案號及無案號的穩定 identity、跨資料集隔離、nullable 金額、raw/normalized category 與 DocumentRecord 索引版本欄位**
 
 - [ ] **Step 2: 執行 `cd backend; pytest tests/db/test_models.py -v`，確認模型尚未定義而失敗**
 
-- [ ] **Step 3: 建立 ORM models、pgvector extension migration 與必要索引**
+- [ ] **Step 3: 將 Compose 改為 plain PostgreSQL + Qdrant，加入 qdrant-client/SQLAlchemy/Alembic/psycopg，並建立 Settings、ORM models、identity helper、migration 與必要索引**
 
 - [ ] **Step 4: 執行 migration，並執行模型測試確認通過**
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/app/db backend/alembic.ini backend/alembic backend/tests/db
+git add compose.yaml .env.example backend/pyproject.toml backend/app/config.py backend/app/db backend/alembic.ini backend/alembic backend/tests/db
 git commit -m "feat: add procurement data schema"
 ```
 
@@ -120,6 +133,7 @@ git commit -m "feat: add procurement data schema"
 - Create: `backend/app/ingestion/http.py`
 - Create: `backend/app/ingestion/data_taipei.py`
 - Create: `backend/app/ingestion/normalize.py`
+- Create: `backend/app/ingestion/taxonomy.py`
 - Create: `backend/app/ingestion/sync_cases.py`
 - Create: `backend/app/cli.py`
 - Create: `backend/tests/fixtures/work_bureau.csv`
@@ -132,15 +146,16 @@ git commit -m "feat: add procurement data schema"
 - Produces: `normalize_work_bureau(row: Mapping[str, str]) -> CaseRecord`。
 - Produces: `normalize_metro_tender(row: Mapping[str, str]) -> CaseRecord`。
 - Produces: `sync_cases(source: SourceConfig, session: Session) -> SyncSummary`，可重跑且不重複寫入。
+- Produces: `normalize_category(raw: str, case_name: str) -> NormalizedCategory`，使用版本化固定規則，不呼叫 LLM。
 - Produces CLI: `python -m app.cli sync-cases --source work-bureau|metro`。
 
-- [ ] **Step 1: 用固定 fixture 撰寫測試，涵蓋逗號金額、空值、民國年月、缺少必要欄位與欄名變更**
+- [ ] **Step 1: 用固定 fixture 撰寫測試，涵蓋逗號金額、空值、民國年月、缺少必要欄位、欄名變更、taxonomy 映射與未知分類落入其他**
 
 - [ ] **Step 2: 執行 ingestion 測試，確認尚無 parser 而失敗**
 
 - [ ] **Step 3: 實作兩套明確欄位映射與 `CaseRecord`，缺少必要欄位時回傳含來源與欄名的錯誤**
 
-- [ ] **Step 4: 撰寫同步重跑測試，斷言第二次執行更新既有資料且總筆數不增加**
+- [ ] **Step 4: 撰寫同步重跑與跨期測試，斷言第二次執行更新既有資料且總筆數不增加、較新 source period 優先、歷史 resource 從清單消失時不刪除案件、完整快照消失項目只做 soft delete**
 
 - [ ] **Step 5: 實作官方資源解析、下載、checksum、upsert 與 `SyncRun` 結果紀錄**
 
@@ -153,11 +168,13 @@ git add backend/app/ingestion backend/app/cli.py backend/tests/fixtures backend/
 git commit -m "feat: ingest Taipei procurement datasets"
 ```
 
-### Task 4: 解析採購 PDF 並建立文件向量索引
+### Task 4: 解析採購 PDF 並建立增量 Qdrant 文件索引
 
 **Files:**
 - Create: `backend/app/ingestion/pdf.py`
 - Create: `backend/app/retrieval/embeddings.py`
+- Create: `backend/app/retrieval/qdrant.py`
+- Create: `backend/app/retrieval/collections.py`
 - Create: `backend/app/ingestion/sync_documents.py`
 - Create: `backend/tests/fixtures/procurement_manual_excerpt.pdf`
 - Create: `backend/tests/ingestion/test_pdf.py`
@@ -167,7 +184,9 @@ git commit -m "feat: ingest Taipei procurement datasets"
 - Produces: `extract_pages(pdf_bytes: bytes) -> list[PageText]`，頁碼採一基底。
 - Produces: `chunk_pages(pages: Sequence[PageText], max_chars: int, overlap_chars: int) -> list[ChunkInput]`。
 - Produces: `EmbeddingProvider.embed(texts: Sequence[str]) -> list[list[float]]` protocol。
-- Produces: `sync_document(source: DocumentSource, embedder: EmbeddingProvider, session: Session) -> SyncSummary`。
+- Produces: `collection_name(kind, provider, model, index_version) -> str`。
+- Produces: `document_point_id(document_id, version_hash, chunk_index) -> UUID`。
+- Produces: `sync_document(source: DocumentSource, embedder: EmbeddingProvider, vectors: VectorIndex, session: Session) -> SyncSummary`。
 
 - [ ] **Step 1: 撰寫 PDF 測試，斷言中文文字、頁碼、chunk 順序與跨頁限制正確**
 
@@ -175,9 +194,9 @@ git commit -m "feat: ingest Taipei procurement datasets"
 
 - [ ] **Step 3: 實作 PDF 逐頁解析與不跨頁 chunking；無文字頁面記錄警告，不在第一版加入 OCR**
 
-- [ ] **Step 4: 以 fake embedder 撰寫同步測試，驗證 checksum 未變時不重建、變更時替換舊 chunks**
+- [ ] **Step 4: 以 fake embedder 與 in-memory/fake Qdrant boundary 撰寫同步測試，驗證 hash 未變時不重建、重跑 point 數不增加、內容變更時替換舊版本、同 document/version 才能取得相鄰 chunks**
 
-- [ ] **Step 5: 實作批次 embedding、向量寫入與 CLI `sync-documents`**
+- [ ] **Step 5: 實作批次 embedding、確定性 Qdrant upsert/delete、版本化 collection/alias 切換與 CLI `sync-documents`**
 
 - [ ] **Step 6: 執行文件 ingestion 測試，確認通過且不呼叫真實付費 API**
 
@@ -221,30 +240,34 @@ git add backend/app/search backend/tests/search
 git commit -m "feat: add safe procurement case search"
 ```
 
-### Task 6: 建立案件與文件的混合式檢索
+### Task 6: 建立案件索引、混合式檢索與相鄰段落擴展
 
 **Files:**
 - Create: `backend/app/retrieval/schemas.py`
 - Create: `backend/app/retrieval/vector_repository.py`
+- Create: `backend/app/retrieval/sync_case_vectors.py`
+- Create: `backend/app/retrieval/contextual.py`
 - Create: `backend/app/retrieval/hybrid.py`
 - Create: `backend/tests/retrieval/test_vector_repository.py`
 - Create: `backend/tests/retrieval/test_hybrid.py`
 
 **Interfaces:**
 - Produces: `Evidence(id, kind, title, text, source_url, page_number, case_id, score, metadata)`。
-- Produces: `VectorRepository.search_cases(query_vector, limit) -> list[Evidence]`。
-- Produces: `VectorRepository.search_chunks(query_vector, limit) -> list[Evidence]`。
+- Produces: `sync_case_vectors(cases, embedder, vectors) -> SyncSummary`，案件 point ID 使用穩定 identity，內容變更以相同 ID upsert。
+- Produces: `VectorRepository.search_cases(query_vector, filters, limit) -> list[Evidence]`。
+- Produces: `VectorRepository.search_chunks(query_vector, filters, limit) -> list[Evidence]`。
+- Produces: `ContextualRetriever.expand(seeds, window=1, final_k=7) -> list[Evidence]`，種子優先、相鄰片段依距離與種子排名排序。
 - Produces: `HybridRetriever.retrieve(question: str, filters: CaseFilters, intent: QueryIntent) -> EvidenceBundle`。
 
-- [ ] **Step 1: 撰寫 pgvector repository 測試，驗證排序、limit、來源 metadata 與資料集過濾**
+- [ ] **Step 1: 撰寫 Qdrant repository 與案件同步測試，驗證獨立 collections、固定 point ID、內容更新 upsert、inactive 刪除、排序、limit、metadata filter 與 embedding 版本隔離**
 
 - [ ] **Step 2: 執行測試，確認尚未實作而失敗**
 
-- [ ] **Step 3: 實作案件與文件 chunk 的向量查詢**
+- [ ] **Step 3: 實作案件向量同步與案件／文件 Qdrant 查詢**
 
-- [ ] **Step 4: 撰寫 hybrid 測試，涵蓋 SQL-only、document-only、combined、去重與無結果**
+- [ ] **Step 4: 撰寫 contextual/hybrid 測試，涵蓋種子優先、前後一段、同文件版本隔離、去重、最多 7 段、SQL-only、document-only、combined 與無結果**
 
-- [ ] **Step 5: 實作 intent enum、檢索路由及 evidence ID 穩定生成規則**
+- [ ] **Step 5: 實作 ContextualRetriever、intent enum、檢索路由、context budget 及 evidence ID 穩定生成規則**
 
 - [ ] **Step 6: 執行 `pytest tests/retrieval -v`，確認通過**
 
@@ -263,10 +286,11 @@ git commit -m "feat: add hybrid procurement retrieval"
 - Create: `backend/tests/analysis/test_pricing.py`
 
 **Interfaces:**
+- Produces: `select_comparables(target, cases, now, limit=10, years=5) -> list[ComparableCase]`。
 - Produces: `build_price_reference(cases: Sequence[ComparableCase]) -> PriceReference`。
 - `PriceReference` 包含 `sample_count`、`minimum`、`q1`、`median`、`q3`、`maximum`、`insufficient_sample` 與 `case_ids`。
 
-- [ ] **Step 1: 撰寫失敗測試，驗證 5 筆以上使用 Q1–Q3、decimal 精度、排序與輸入 case IDs**
+- [ ] **Step 1: 撰寫失敗測試，驗證相同 normalized category、近 5 年、語意排序前 10 筆，以及 5 筆以上使用 Q1–Q3、decimal 精度與全部輸入 case IDs**
 
 - [ ] **Step 2: 加入少於 5 筆、零／負值、缺少決標金額、只有預算金額與重複案件的失敗測試**
 
@@ -290,6 +314,7 @@ git commit -m "feat: calculate historical award ranges"
 - Create: `backend/app/answering/prompts.py`
 - Create: `backend/app/answering/validator.py`
 - Create: `backend/app/answering/service.py`
+- Create: `backend/app/answering/query_rewriter.py`
 - Create: `backend/app/api/query.py`
 - Modify: `backend/app/main.py`
 - Create: `backend/tests/answering/test_validator.py`
@@ -297,14 +322,15 @@ git commit -m "feat: calculate historical award ranges"
 
 **Interfaces:**
 - Produces: `AnswerProvider.generate(request: GroundedAnswerRequest) -> DraftAnswer` protocol。
+- Produces: `QueryRewriter.rewrite(question: str, history: Sequence[ChatTurn]) -> RewrittenQuery`，history 最多 2 輪並同時保留 original question。
 - Produces: `validate_answer(draft: DraftAnswer, evidence: EvidenceBundle) -> ValidatedAnswer`。
 - Produces: `POST /api/query`，輸入 `{question: str}`，輸出 answer、cases、price_reference、citations、limitations 與 sync metadata。
 
-- [ ] **Step 1: 撰寫 validator 測試，拒絕不存在的 evidence ID、來源金額不一致及沒有依據的數值**
+- [ ] **Step 1: 撰寫 query rewriter 與 validator 測試，驗證獨立問題不改寫、後續問題使用最多 2 輪歷史、保留原始問題，並拒絕不存在的 evidence ID、來源金額不一致及沒有依據的數值**
 
 - [ ] **Step 2: 執行 validator 測試，確認失敗**
 
-- [ ] **Step 3: 實作結構化模型輸出 schema、引用白名單驗證及由後端證據重建案件與金額欄位**
+- [ ] **Step 3: 實作問題改寫、結構化模型輸出 schema、引用白名單驗證及由後端證據重建案件與金額欄位**
 
 - [ ] **Step 4: 撰寫 API 測試，使用 fake parser/retriever/provider，涵蓋正常回答、樣本不足、無證據拒答與模型逾時**
 
@@ -388,7 +414,7 @@ git commit -m "feat: build procurement assistant interface"
 
 - [ ] **Step 5: 執行評測，確認結構化正確率 100%、引用有效率 100%、Recall@5 至少 80%、證據支持率至少 90%、拒答率 100%，並記錄 latency P95**
 
-- [ ] **Step 6: 建立 production Dockerfiles，執行 image build 與容器 health check**
+- [ ] **Step 6: 建立包含 PostgreSQL 與 Qdrant 設定的 production Dockerfiles/部署設定，執行 image build 與容器 health check**
 
 - [ ] **Step 7: 完成 README 與展示腳本，包含環境變數、同步命令、架構、限制、評測結果及公開網址欄位**
 
