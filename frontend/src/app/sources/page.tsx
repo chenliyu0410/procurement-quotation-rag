@@ -1,0 +1,2 @@
+const sources = [{ name: "臺北市政府工務局採購案件", period: "歷史決標資料", status: "待首次同步" }, { name: "臺北捷運公司採購案件預定招標時程", period: "按月更新", status: "待首次同步" }, { name: "臺北市政府採購作業手冊", period: "現行公開版本", status: "待建立索引" }];
+export default function SourcesPage() { return <main className="sources-page"><a href="/">返回查詢</a><h1>資料來源與狀態</h1><p>所有回答都應能連回公開資料或文件頁碼。</p><div className="source-list">{sources.map((source) => <article key={source.name}><h2>{source.name}</h2><dl><dt>涵蓋期間</dt><dd>{source.period}</dd><dt>狀態</dt><dd>{source.status}</dd></dl></article>)}</div></main>; }

@@ -1,0 +1,2 @@
+import type { PriceReference as Price } from "../types/query";
+export function PriceReference({ value }: { value: Price | null }) { if (!value) return null; return <section className="price"><h2>歷史決標金額參考</h2>{value.insufficient_sample ? <p className="notice">目前只有 {value.sample_count} 筆可比較案件，樣本不足，暫不產生區間。</p> : <><strong>{value.q1} – {value.q3}</strong><p>中位數 {value.median}，共 {value.sample_count} 筆。</p></>}</section>; }

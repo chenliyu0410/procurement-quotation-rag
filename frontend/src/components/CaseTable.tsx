@@ -1,0 +1,2 @@
+import type { CaseEvidence } from "../types/query";
+export function CaseTable({ cases }: { cases: CaseEvidence[] }) { if (!cases.length) return null; return <section><h2>相似案件</h2><div className="table-wrap"><table><thead><tr><th>案件</th><th>機關</th><th>決標金額</th><th>分類</th></tr></thead><tbody>{cases.map((item) => <tr key={item.id}><td>{item.title}</td><td>{String(item.metadata.agency ?? "—")}</td><td className="number">{String(item.metadata.award_amount ?? "—")}</td><td>{String(item.metadata.category_normalized ?? "—")}</td></tr>)}</tbody></table></div></section>; }
