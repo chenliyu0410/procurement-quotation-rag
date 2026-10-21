@@ -2,6 +2,16 @@
 
 更新日期：2026-10-21（臺北時間）。
 
+## 真實模型連線驗證
+
+使用者已在本機 `.env` 提供 API 金鑰；金鑰未寫入紀錄或版本控制。
+
+- 已補上原先空白的模型設定：`LLM_MODEL=gpt-5-mini`、`EMBEDDING_MODEL=text-embedding-3-small`，並同步本機 `backend/.env` 供 CLI 使用。
+- 已向官方 API 實際驗證模型認證、一次結構化回答及一次 embedding。
+- 合成測試案件的模型回答通過既有引用與數字驗證，回傳一筆引用，單次耗時約 4.16 秒。
+- embedding 回傳 1536 維向量，單次耗時約 3.50 秒。
+- 這是少量連線測試，尚未匯入正式採購資料，不能當成正式題庫成績或 P95。
+
 ## 本次完成
 
 - 接續上次尚未提交的 Task 10：Dockerfiles、完整應用 Compose profile、GitHub Actions、題庫、指標彙總器、README 與面試展示步驟。
@@ -30,7 +40,7 @@
 
 ## 尚待外部驗收
 
-1. 在本機 `.env` 設定個人可用的 `LLM_API_KEY`、`LLM_MODEL`、`EMBEDDING_MODEL`，不要將金鑰放進版本控制或對話。
+1. 模型與 embedding 連線已驗證；下一步使用實際採購資料驗證完整查詢流程。
 2. 使用有效官方 CSV 下載網址同步真實案件，建立案件向量與文件索引。
 3. 依 `backend/evals/README.md` 保存逐題實際 response、evidence、人工標註及量測延遲；十題目前全部待測。
 4. 確認真實資料的查詢、文件頁碼、價格樣本及拒答；不得以單元測試通過代替品質門檻。
