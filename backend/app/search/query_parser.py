@@ -67,7 +67,8 @@ class QueryParser:
         agency_text = re.sub(r"(?:民國)?\d{2,4}年(?:\d{1,2}月)?", " ", question)
         agency = re.search(r"([\u4e00-\u9fff]{2,20}(?:局|處|公司|機關))", agency_text)
         if agency:
-            values["agency"] = agency.group(1).removeprefix("找")
+            agency_name = re.sub(r"^(?:請)?(?:找出|查詢|列出|找)", "", agency.group(1))
+            values["agency"] = {"捷運公司": "臺北大眾捷運股份有限公司"}.get(agency_name, agency_name)
         try:
             return CaseFilters.model_validate(values)
         except (ValidationError, ValueError) as exc:

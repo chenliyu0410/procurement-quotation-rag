@@ -48,3 +48,34 @@ def test_equivalent_decimal_money_formats_are_accepted():
         text="決標金額216300.00元", source_url="https://example.org", metadata={"award_amount": "216300.00"})])
     draft = DraftAnswer(answer="決標金額216,300元", citations=[Citation(evidence_id="case:a")])
     assert validate_answer(draft, evidence).answer == draft.answer
+
+
+def test_verified_budget_filter_echo_is_not_mistaken_for_a_case_amount():
+    from app.search.schemas import CaseFilters
+    evidence = EvidenceBundle(cases=[Evidence(id="case:a", kind="case", title="設備案", text="預算7599391.00元",
+        source_url="https://example.org")], applied_filters=CaseFilters(amount_kind="budget", min_amount=3000000, max_amount=10000000))
+    draft = DraftAnswer(answer="符合預算介於300萬到1000萬元之案件，預算7599391元。", citations=[Citation(evidence_id="case:a")])
+    assert validate_answer(draft, evidence).answer == draft.answer
+
+
+@pytest.mark.parametrize("answer", [
+    "本案預算3000000元。", "符合預算300萬到2000萬元的案件。",
+    "本案不符合預算300萬到1000萬元。", "符合預算300萬到1000萬元以上。",
+    "未符合預算300萬到1000萬元。", "符合預算300萬到1000萬元以下。",
+])
+def test_filter_bounds_cannot_authorize_invented_case_amounts_or_changed_ranges(answer):
+    from app.search.schemas import CaseFilters
+    evidence = EvidenceBundle(cases=[Evidence(id="case:a", kind="case", title="設備案", text="預算7599391.00元",
+        source_url="https://example.org")], applied_filters=CaseFilters(amount_kind="budget", min_amount=3000000, max_amount=10000000))
+    with pytest.raises(AnswerValidationError):
+        validate_answer(DraftAnswer(answer=answer, citations=[Citation(evidence_id="case:a")]), evidence)
+
+
+def test_verified_upper_bound_echo_and_unverified_amount_remain_distinct():
+    from app.search.schemas import CaseFilters
+    evidence = EvidenceBundle(cases=[Evidence(id="case:a", kind="case", title="設備案", text="預算7599391元",
+        source_url="https://example.org")], applied_filters=CaseFilters(amount_kind="budget", max_amount=10000000))
+    valid = DraftAnswer(answer="篩選條件：預算1000萬以下，設備案預算7599391元。", citations=[Citation(evidence_id="case:a")])
+    assert validate_answer(valid, evidence).answer == valid.answer
+    with pytest.raises(AnswerValidationError):
+        validate_answer(valid.model_copy(update={"answer": "篩選條件：預算1000萬以下，設備案預算10000000元。"}), evidence)

@@ -35,7 +35,7 @@ class CaseRecord:
 
 
 def parse_money(raw: str | int | Decimal | None) -> Decimal | None:
-    if raw is None or str(raw).strip() in {"", "-", "無"}:
+    if raw is None or str(raw).strip() in {"", "-", "無", "不公開", "預算金額不公開", "未公開", "尚未核定", "未定"}:
         return None
     cleaned = re.sub(r"[^0-9.\-]", "", str(raw).replace(",", ""))
     try:
@@ -77,6 +77,19 @@ def normalize_work_bureau(row: Mapping[str, str], *, source_period: str = "", so
 
 
 def normalize_metro_tender(row: Mapping[str, str], *, source_period: str = "", source_url: str = "") -> CaseRecord:
+    if "統計期_民國年月" in row:
+        name = _required(row, "metro", "標案名稱")
+        raw_period = _required(row, "metro", "統計期_民國年月")
+        if re.fullmatch(r"\d{5,6}", raw_period):
+            raw_period = raw_period[:-2] + "/" + raw_period[-2:]
+        period_date = parse_date(raw_period, month_only=True)
+        period = period_date.strftime("%Y-%m")
+        if source_period and source_period != period:
+            raise NormalizationError(f"metro: 指定期別 {source_period} 與來源期別 {period} 不一致")
+        category = str(row.get("標的分類", "")).strip()
+        return CaseRecord("metro", None, "臺北大眾捷運股份有限公司", name, category,
+            normalize_category(category, name).value, parse_money(row.get("預算金額")), None, None, None,
+            period, source_url)
     agency = _required(row, "metro", "主辦單位")
     name = _required(row, "metro", "採購案名")
     category = str(row.get("採購標的", "")).strip()

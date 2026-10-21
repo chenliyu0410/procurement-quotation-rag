@@ -2,7 +2,7 @@
 
 以臺北市資料大平臺公開採購資料建立的作品集 RAG 專案。系統將可驗證的 SQL 條件查詢、Qdrant 語意搜尋、採購文件問答與歷史決標金額統計放在同一個介面，回答中的案件、金額與文件頁碼都必須能追溯來源。
 
-目前已完成模組與查詢流程接線、真實模型連線測試，並匯入及建立工務局 API 的 1,043 筆案件向量。兩筆實際相似查詢已通過目標檢索與引用檢查，紀錄見 [live-case-smoke.json](backend/evals/live-case-smoke.json)。這不代表已通過正式題庫評測；其他資料源、人工評測及公開部署仍待完成。詳細交接見 [docs/progress.md](docs/progress.md)。
+目前已匯入並索引工務局 1,043 筆決標紀錄、捷運公司 52 筆預算案件，以及工程會兩份採購程序文件的 22 個段落。真實模型已通過相似案件、捷運預算篩選及文件頁碼引用的少量實測，紀錄見 [案件測試](backend/evals/live-case-smoke.json)與[預算／文件測試](backend/evals/live-metro-procedure-smoke.json)。正式十題人工評測、有日期的價格樣本及公開部署仍待完成。詳細交接見 [docs/progress.md](docs/progress.md)。
 
 ## 能力展示
 
@@ -66,6 +66,15 @@ python -m app.cli sync-cases --source work-bureau --format api --resource-url "h
 
 API reader 以 `limit=1000`、`offset` 與 `_id` 排序完整分頁下載，再進行正規化與交易寫入；空頁、重複列、筆數異動或 HTTP 錯誤會中止同步。`--dry-run` 不連接資料庫。系統憑證庫負責 TLS 驗證，且不跟隨重新導向。`--period` 是來源快照期別，不是決標日期。
 
+捷運公司 2026-10 官方 API 亦可直接同步，並只為該來源建立向量：
+
+```bash
+python -m app.cli sync-cases --source metro --format api --resource-url "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire" --period 2026-10
+python -m app.cli sync-case-vectors --source metro
+```
+
+實測匯入 52 筆，重跑異動 0 筆，其中 20 筆「預算金額不公開」保留 null。原始資料沒有正式案號與實際招標／決標日期；序號不當案號，統計期只顯示為來源期別。捷運資料沿用機關、名稱與年度識別，不使用會隨每月資源更換的 API 列 ID。介面分開顯示預算與決標金額。
+
 2026-10-21 實測上述資源為 1,043 筆決標紀錄；相同案號可能屬於不同機關或多筆決標，因此 API 列採 `resource_id + _id` 識別並保留原始案號，重跑相同快照不增加筆數。平台重新匯入時若重編 `_id`，仍需人工比對；這不是跨資源／跨期的自然案件主鍵。這支 API 沒有決標日期，全部維持空值，不能用 `_importdate` 冒充，因此這批資料不能直接支援「近五年決標金額」統計。多筆決標紀錄也不能當成獨立標案做價格樣本。
 
 上述 CLI 與 Alembic 會讀取工作目錄中的 `.env`。在 `backend/` 執行時，請先把根目錄 `.env` 複製到 `backend/.env`，或以 shell 設定環境變數。同步文件與案件向量會呼叫設定的 embedding API；`EMBEDDING_DIMENSION` 預設為 1536，文件命令的 `--dimension` 必須與查詢使用的設定相同。尚未設定模型時，查詢 API 會回傳 `configuration_required`。
@@ -105,7 +114,11 @@ GitHub Actions 會執行後端測試、前端測試、正式建置、Compose 設
 
 - [臺北市政府工務局採購案件](https://data.taipei/dataset/detail?id=2be36284-8463-495c-bcff-fc45d403efac)
 - [臺北捷運公司採購案件預定招標時程](https://data.taipei/dataset/detail?id=f4fd7f03-9bf6-41de-a003-02c437596570)
-- [臺北市政府採購作業手冊](https://data.taipei/dataset/detail?id=a7e84479-2c8c-41db-8572-8b51197910db)
+- [工程會採購業務標準作業流程](https://www.pcc.gov.tw/content/index?eid=1740&type=C)：JP01「未經公告程序之限制性招標」（2024-10-18，6 頁）與 JP03「開標作業」（2021-12，5 頁），分別索引 12、10 個段落。
+
+程序文件來源為行政院公共工程委員會，依其[網站資料開放宣告](https://www.pcc.gov.tw/content/cp.aspx?n=8EAE57B03C93D280)標示出處。下載網址、版本與 SHA-256 見 [procedure-sources.json](docs/procedure-sources.json)。PDF 保存在本機 `data/documents/`，未放入 Git；依 manifest 下載後，可用 `sync-documents <PDF路徑> --document-id pcc-jp01 --source-url <manifest中的網址>` 同步，JP03 同理。相同內容重跑會略過 embedding。文件引用連結會附帶 `#page=` 頁碼。
+
+原規劃的臺北市採購手冊資源是 2012 年版且明列限制再利用，本次改用上述工程會文件。回答僅依已索引版本，不保證涵蓋現行法令的所有修正。
 
 ## 限制
 

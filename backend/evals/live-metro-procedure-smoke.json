@@ -1,0 +1,346 @@
+{
+  "kind": "live_smoke_not_quality_benchmark",
+  "tested_at": "2026-10-21T06:55:09.816295+00:00",
+  "models": {
+    "answer": "gpt-5-mini",
+    "reasoning_effort": "minimal",
+    "embedding": "text-embedding-3-small",
+    "dimension": 1536
+  },
+  "index_integrity": {
+    "active_case_count": 1095,
+    "case_vector_count": 1095,
+    "sources": {
+      "metro": 52,
+      "work-bureau": 1043
+    },
+    "document_count": 2,
+    "document_vector_count": 22,
+    "documents": {
+      "pcc-jp01": 12,
+      "pcc-jp03": 10
+    },
+    "all_point_ids_match_sql": true
+  },
+  "sample_count": 3,
+  "samples": [
+    {
+      "kind": "budget",
+      "question": "找捷運公司預算300萬到1000萬元的案件",
+      "http_status": 200,
+      "status": "ready",
+      "latency_ms": 3738,
+      "case_count": 7,
+      "citations": [
+        {
+          "evidence_id": "case:13375d814921cf3a64c90fb1d6c656460574cc03d156f894e3931d544485d464",
+          "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+          "page_number": null
+        },
+        {
+          "evidence_id": "case:27e80123d328e509ad6301b44a4dc2e65e37b60dd4765557354f18b45caf4736",
+          "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+          "page_number": null
+        },
+        {
+          "evidence_id": "case:2a42ffce4403341f7686191c5a851c6b45fc1ecca579370d7ba978053cd8d138",
+          "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+          "page_number": null
+        }
+      ],
+      "answer": "符合預算介於300萬到1000萬元之臺北大眾捷運股份有限公司案件（最多列三筆最相關）：\n文湖線370型電聯車車廂地板修復工作，預算：5466400.00。",
+      "limitations": [
+        "僅列出最多三筆最相關案件；其餘符合條件的案件可由案件清單查看。"
+      ],
+      "response": {
+        "answer": "符合預算介於300萬到1000萬元之臺北大眾捷運股份有限公司案件（最多列三筆最相關）：\n文湖線370型電聯車車廂地板修復工作，預算：5466400.00。",
+        "cases": [
+          {
+            "id": "case:13375d814921cf3a64c90fb1d6c656460574cc03d156f894e3931d544485d464",
+            "kind": "case",
+            "title": "文湖線370型電聯車車廂地板修復工作",
+            "text": "文湖線370型電聯車車廂地板修復工作；機關：臺北大眾捷運股份有限公司；預算：5466400.00；決標：None",
+            "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+            "page_number": null,
+            "case_id": "13375d814921cf3a64c90fb1d6c656460574cc03d156f894e3931d544485d464",
+            "score": 0.0,
+            "metadata": {
+              "id": "13375d814921cf3a64c90fb1d6c656460574cc03d156f894e3931d544485d464",
+              "agency": "臺北大眾捷運股份有限公司",
+              "case_name": "文湖線370型電聯車車廂地板修復工作",
+              "category": "勞務",
+              "budget_amount": "5466400.00",
+              "award_amount": null,
+              "announcement_date": null,
+              "expected_tender_date": null,
+              "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+              "source_period": "2026-10",
+              "category_normalized": "勞務"
+            }
+          },
+          {
+            "id": "case:27e80123d328e509ad6301b44a4dc2e65e37b60dd4765557354f18b45caf4736",
+            "kind": "case",
+            "title": "絕緣滾珠軸承等2項採購",
+            "text": "絕緣滾珠軸承等2項採購；機關：臺北大眾捷運股份有限公司；預算：3729600.00；決標：None",
+            "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+            "page_number": null,
+            "case_id": "27e80123d328e509ad6301b44a4dc2e65e37b60dd4765557354f18b45caf4736",
+            "score": 0.0,
+            "metadata": {
+              "id": "27e80123d328e509ad6301b44a4dc2e65e37b60dd4765557354f18b45caf4736",
+              "agency": "臺北大眾捷運股份有限公司",
+              "case_name": "絕緣滾珠軸承等2項採購",
+              "category": "財物",
+              "budget_amount": "3729600.00",
+              "award_amount": null,
+              "announcement_date": null,
+              "expected_tender_date": null,
+              "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+              "source_period": "2026-10",
+              "category_normalized": "財物"
+            }
+          },
+          {
+            "id": "case:2a42ffce4403341f7686191c5a851c6b45fc1ecca579370d7ba978053cd8d138",
+            "kind": "case",
+            "title": "車間通道帽蓋採購",
+            "text": "車間通道帽蓋採購；機關：臺北大眾捷運股份有限公司；預算：4962825.00；決標：None",
+            "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+            "page_number": null,
+            "case_id": "2a42ffce4403341f7686191c5a851c6b45fc1ecca579370d7ba978053cd8d138",
+            "score": 0.0,
+            "metadata": {
+              "id": "2a42ffce4403341f7686191c5a851c6b45fc1ecca579370d7ba978053cd8d138",
+              "agency": "臺北大眾捷運股份有限公司",
+              "case_name": "車間通道帽蓋採購",
+              "category": "財物",
+              "budget_amount": "4962825.00",
+              "award_amount": null,
+              "announcement_date": null,
+              "expected_tender_date": null,
+              "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+              "source_period": "2026-10",
+              "category_normalized": "財物"
+            }
+          },
+          {
+            "id": "case:31cd16884315e5a3146d16aea5c20cfda3de35d81107f2ed48c8efbbfefb766d",
+            "kind": "case",
+            "title": "中山國中站及科技大樓站廁間坐蹲比改善工作",
+            "text": "中山國中站及科技大樓站廁間坐蹲比改善工作；機關：臺北大眾捷運股份有限公司；預算：4774719.00；決標：None",
+            "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+            "page_number": null,
+            "case_id": "31cd16884315e5a3146d16aea5c20cfda3de35d81107f2ed48c8efbbfefb766d",
+            "score": 0.0,
+            "metadata": {
+              "id": "31cd16884315e5a3146d16aea5c20cfda3de35d81107f2ed48c8efbbfefb766d",
+              "agency": "臺北大眾捷運股份有限公司",
+              "case_name": "中山國中站及科技大樓站廁間坐蹲比改善工作",
+              "category": "勞務",
+              "budget_amount": "4774719.00",
+              "award_amount": null,
+              "announcement_date": null,
+              "expected_tender_date": null,
+              "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+              "source_period": "2026-10",
+              "category_normalized": "勞務"
+            }
+          },
+          {
+            "id": "case:490f4aa85254f0c285b8c3e2f72f947e7064c15594974826d8fc575de8380b09",
+            "kind": "case",
+            "title": "捷運廠站空調系統設備檢修工作",
+            "text": "捷運廠站空調系統設備檢修工作；機關：臺北大眾捷運股份有限公司；預算：7599391.00；決標：None",
+            "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+            "page_number": null,
+            "case_id": "490f4aa85254f0c285b8c3e2f72f947e7064c15594974826d8fc575de8380b09",
+            "score": 0.0,
+            "metadata": {
+              "id": "490f4aa85254f0c285b8c3e2f72f947e7064c15594974826d8fc575de8380b09",
+              "agency": "臺北大眾捷運股份有限公司",
+              "case_name": "捷運廠站空調系統設備檢修工作",
+              "category": "資訊服務",
+              "budget_amount": "7599391.00",
+              "award_amount": null,
+              "announcement_date": null,
+              "expected_tender_date": null,
+              "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+              "source_period": "2026-10",
+              "category_normalized": "資訊服務"
+            }
+          },
+          {
+            "id": "case:f70ed25ffdbccb24f5a29a6722f2b3769da819316541a42764fcf5e5fb8d5273",
+            "kind": "case",
+            "title": "貓空纜車車廂吊臂及副車架委外翻修工作",
+            "text": "貓空纜車車廂吊臂及副車架委外翻修工作；機關：臺北大眾捷運股份有限公司；預算：4842816.00；決標：None",
+            "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+            "page_number": null,
+            "case_id": "f70ed25ffdbccb24f5a29a6722f2b3769da819316541a42764fcf5e5fb8d5273",
+            "score": 0.0,
+            "metadata": {
+              "id": "f70ed25ffdbccb24f5a29a6722f2b3769da819316541a42764fcf5e5fb8d5273",
+              "agency": "臺北大眾捷運股份有限公司",
+              "case_name": "貓空纜車車廂吊臂及副車架委外翻修工作",
+              "category": "勞務",
+              "budget_amount": "4842816.00",
+              "award_amount": null,
+              "announcement_date": null,
+              "expected_tender_date": null,
+              "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+              "source_period": "2026-10",
+              "category_normalized": "勞務"
+            }
+          },
+          {
+            "id": "case:fccc5e209a48923b4717df950739b15b12c41380ab5adddc291ab6f735e53250",
+            "kind": "case",
+            "title": "高運量電聯車空調低壓管路泡棉包覆工作（A-B組）",
+            "text": "高運量電聯車空調低壓管路泡棉包覆工作（A-B組）；機關：臺北大眾捷運股份有限公司；預算：9966483.00；決標：None",
+            "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+            "page_number": null,
+            "case_id": "fccc5e209a48923b4717df950739b15b12c41380ab5adddc291ab6f735e53250",
+            "score": 0.0,
+            "metadata": {
+              "id": "fccc5e209a48923b4717df950739b15b12c41380ab5adddc291ab6f735e53250",
+              "agency": "臺北大眾捷運股份有限公司",
+              "case_name": "高運量電聯車空調低壓管路泡棉包覆工作（A-B組）",
+              "category": "勞務",
+              "budget_amount": "9966483.00",
+              "award_amount": null,
+              "announcement_date": null,
+              "expected_tender_date": null,
+              "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+              "source_period": "2026-10",
+              "category_normalized": "勞務"
+            }
+          }
+        ],
+        "price_reference": null,
+        "citations": [
+          {
+            "evidence_id": "case:13375d814921cf3a64c90fb1d6c656460574cc03d156f894e3931d544485d464",
+            "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+            "page_number": null
+          },
+          {
+            "evidence_id": "case:27e80123d328e509ad6301b44a4dc2e65e37b60dd4765557354f18b45caf4736",
+            "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+            "page_number": null
+          },
+          {
+            "evidence_id": "case:2a42ffce4403341f7686191c5a851c6b45fc1ecca579370d7ba978053cd8d138",
+            "source_url": "https://data.taipei/api/v1/dataset/69fe3257-3e97-4386-8a8c-f760586f5be9?scope=resourceAquire",
+            "page_number": null
+          }
+        ],
+        "limitations": [
+          "僅列出最多三筆最相關案件；其餘符合條件的案件可由案件清單查看。"
+        ],
+        "sync_metadata": {
+          "status": "ready"
+        }
+      }
+    },
+    {
+      "kind": "procedure",
+      "question": "依採購程序規範，小額採購可以請一家廠商代蒐三家報價嗎？",
+      "http_status": 200,
+      "status": "ready",
+      "latency_ms": 5173,
+      "case_count": 0,
+      "citations": [
+        {
+          "evidence_id": "chunk:92830663-b717-5696-974b-51544e45edba",
+          "source_url": "https://www.pcc.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMjk3L2NrZmlsZS8zMTE0ZTU5Ni0zOGIwLTQ2OGYtODM1Yy00YWJkNzc1NmFjMGIucGRm&n=SlAwMeacque2k%2bWFrOWRiueoi%2bW6j%2bS5i%2bmZkOWItuaAp%2baLm%2baomS3kv67mraPlvowtZmluYWwucGRm&icon=.pdf",
+          "page_number": 1
+        },
+        {
+          "evidence_id": "chunk:0680749e-f906-5256-a906-dfe8238abbcd",
+          "source_url": "https://www.pcc.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMjk3L2NrZmlsZS8zMTE0ZTU5Ni0zOGIwLTQ2OGYtODM1Yy00YWJkNzc1NmFjMGIucGRm&n=SlAwMeacque2k%2bWFrOWRiueoi%2bW6j%2bS5i%2bmZkOWItuaAp%2baLm%2baomS3kv67mraPlvowtZmluYWwucGRm&icon=.pdf",
+          "page_number": 1
+        }
+      ],
+      "answer": "不可。文件明確指出「不要洽1 家廠商代為蒐集3 家廠商之報價或估價單」，並列為機關辦理公告金額十分之一以下採購之常見誤解或錯誤態樣，亦提醒小額採購不得誤以為僅可逕洽1家廠商。",
+      "limitations": [
+        "僅依提供之文件回答；如需具體案件適用或例外（例如共同供應契約或法定緊急情形）請提供案件資料以供判斷。"
+      ],
+      "response": {
+        "answer": "不可。文件明確指出「不要洽1 家廠商代為蒐集3 家廠商之報價或估價單」，並列為機關辦理公告金額十分之一以下採購之常見誤解或錯誤態樣，亦提醒小額採購不得誤以為僅可逕洽1家廠商。",
+        "cases": [],
+        "price_reference": null,
+        "citations": [
+          {
+            "evidence_id": "chunk:92830663-b717-5696-974b-51544e45edba",
+            "source_url": "https://www.pcc.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMjk3L2NrZmlsZS8zMTE0ZTU5Ni0zOGIwLTQ2OGYtODM1Yy00YWJkNzc1NmFjMGIucGRm&n=SlAwMeacque2k%2bWFrOWRiueoi%2bW6j%2bS5i%2bmZkOWItuaAp%2baLm%2baomS3kv67mraPlvowtZmluYWwucGRm&icon=.pdf",
+            "page_number": 1
+          },
+          {
+            "evidence_id": "chunk:0680749e-f906-5256-a906-dfe8238abbcd",
+            "source_url": "https://www.pcc.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMjk3L2NrZmlsZS8zMTE0ZTU5Ni0zOGIwLTQ2OGYtODM1Yy00YWJkNzc1NmFjMGIucGRm&n=SlAwMeacque2k%2bWFrOWRiueoi%2bW6j%2bS5i%2bmZkOWItuaAp%2baLm%2baomS3kv67mraPlvowtZmluYWwucGRm&icon=.pdf",
+            "page_number": 1
+          }
+        ],
+        "limitations": [
+          "僅依提供之文件回答；如需具體案件適用或例外（例如共同供應契約或法定緊急情形）請提供案件資料以供判斷。"
+        ],
+        "sync_metadata": {
+          "status": "ready"
+        }
+      }
+    },
+    {
+      "kind": "opening",
+      "question": "依開標作業程序，開標前應通知哪些人員？",
+      "http_status": 200,
+      "status": "ready",
+      "latency_ms": 3527,
+      "case_count": 0,
+      "citations": [
+        {
+          "evidence_id": "chunk:ffeab88a-aa4d-58a7-ae14-ea8b86daf64f",
+          "source_url": "https://www.pcc.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMjk3L2NrZmlsZS8wMTIxODUzZi1mNTMyLTQyZWUtOGVlNC0wNGIwZmE2N2I3OWQucGRm&n=6ZaL5qiZ5L2c5qWtKDIwMjExMjIz5LiK5p62KS5wZGY%3d&icon=.pdf",
+          "page_number": 1
+        },
+        {
+          "evidence_id": "chunk:62197375-66f7-53aa-98a3-4655341cbda4",
+          "source_url": "https://www.pcc.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMjk3L2NrZmlsZS8wMTIxODUzZi1mNTMyLTQyZWUtOGVlNC0wNGIwZmE2N2I3OWQucGRm&n=6ZaL5qiZ5L2c5qWtKDIwMjExMjIz5LiK5p62KS5wZGY%3d&icon=.pdf",
+          "page_number": 2
+        }
+      ],
+      "answer": "依提供之作業程序，開標前應通知的包括：主持開標人員（由機關首長或其授權人員指派）、上級機關及主（會）計單位與有關單位派員監辦（視採購金額適用相關規定而定）、以及若開標後需當場審標者，應通知承辦審標事項之人員會辦或協辦。",
+      "limitations": [
+        "僅根據提供之《JP03 開標作業（2021-12版）》文件回答；若案件或機關另有特定規定或其他相關文件，可能有不同通知對象。"
+      ],
+      "response": {
+        "answer": "依提供之作業程序，開標前應通知的包括：主持開標人員（由機關首長或其授權人員指派）、上級機關及主（會）計單位與有關單位派員監辦（視採購金額適用相關規定而定）、以及若開標後需當場審標者，應通知承辦審標事項之人員會辦或協辦。",
+        "cases": [],
+        "price_reference": null,
+        "citations": [
+          {
+            "evidence_id": "chunk:ffeab88a-aa4d-58a7-ae14-ea8b86daf64f",
+            "source_url": "https://www.pcc.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMjk3L2NrZmlsZS8wMTIxODUzZi1mNTMyLTQyZWUtOGVlNC0wNGIwZmE2N2I3OWQucGRm&n=6ZaL5qiZ5L2c5qWtKDIwMjExMjIz5LiK5p62KS5wZGY%3d&icon=.pdf",
+            "page_number": 1
+          },
+          {
+            "evidence_id": "chunk:62197375-66f7-53aa-98a3-4655341cbda4",
+            "source_url": "https://www.pcc.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMjk3L2NrZmlsZS8wMTIxODUzZi1mNTMyLTQyZWUtOGVlNC0wNGIwZmE2N2I3OWQucGRm&n=6ZaL5qiZ5L2c5qWtKDIwMjExMjIz5LiK5p62KS5wZGY%3d&icon=.pdf",
+            "page_number": 2
+          }
+        ],
+        "limitations": [
+          "僅根據提供之《JP03 開標作業（2021-12版）》文件回答；若案件或機關另有特定規定或其他相關文件，可能有不同通知對象。"
+        ],
+        "sync_metadata": {
+          "status": "ready"
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Three exploratory smoke checks, not the ten-question evaluation or P95.",
+    "Budget sample was rerun after fixing verified filter-echo validation.",
+    "Procedure answers apply to the indexed source versions; no guarantee of current law."
+  ]
+}

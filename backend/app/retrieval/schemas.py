@@ -3,6 +3,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 from app.analysis.schemas import PriceReference
+from app.search.schemas import CaseFilters
 
 
 class QueryIntent(StrEnum):
@@ -27,3 +28,4 @@ class EvidenceBundle(BaseModel):
     cases: list[Evidence] = Field(default_factory=list)
     documents: list[Evidence] = Field(default_factory=list)
     price_reference: PriceReference | None = None
+    applied_filters: CaseFilters | None = None

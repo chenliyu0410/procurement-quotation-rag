@@ -35,3 +35,4 @@ class CaseResult(BaseModel):
     announcement_date: date | None
     expected_tender_date: date | None
     source_url: str
+    source_period: str = ""

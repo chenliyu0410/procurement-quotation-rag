@@ -53,3 +53,26 @@ def test_fixed_csv_fixtures_are_parsed():
                       source_period="2024-10", source_url="https://example.test/metro")
     assert len(work) == 2
     assert len(metro) == 1
+
+
+def test_official_metro_schema_preserves_reporting_month_without_inventing_tender_date():
+    row = {"序號/編號": "1", "標案名稱": "捷運廠站空調系統設備檢修工作", "預算金額": "7,599,391",
+           "標的分類": "勞務類", "統計期_民國年月": "11510"}
+    record = normalize_metro_tender(row, source_period="2026-10")
+    assert record.agency == "臺北大眾捷運股份有限公司"
+    assert record.case_number_raw is None
+    assert record.budget_amount == Decimal("7599391")
+    assert record.source_period == "2026-10"
+    assert record.expected_tender_date is record.announcement_date is record.award_amount is None
+
+
+def test_official_metro_unpublished_budget_is_null():
+    row = {"序號/編號": "3", "標案名稱": "空壓機電纜線軍規接頭等2項採購", "預算金額": "預算金額不公開",
+           "標的分類": "財物類", "統計期_民國年月": "11510"}
+    assert normalize_metro_tender(row).budget_amount is None
+
+
+def test_official_metro_reporting_period_must_match_requested_snapshot():
+    row = {"標案名稱": "捷運設備", "預算金額": "100", "標的分類": "財物類", "統計期_民國年月": "11510"}
+    with pytest.raises(NormalizationError, match="期別"):
+        normalize_metro_tender(row, source_period="2026-09")

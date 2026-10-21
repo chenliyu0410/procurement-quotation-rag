@@ -1,0 +1,27 @@
+{
+  "retrieved_on": "2026-10-21",
+  "publisher": "行政院公共工程委員會",
+  "catalog_url": "https://www.pcc.gov.tw/content/index?eid=1740&type=C",
+  "license_url": "https://www.pcc.gov.tw/content/cp.aspx?n=8EAE57B03C93D280",
+  "license": "政府資料開放授權條款第1版，依網站開放宣告；保留來源與版本",
+  "documents": [
+    {
+      "document_id": "pcc-jp01",
+      "title": "未經公告程序之限制性招標",
+      "version": "2024-10-18",
+      "source_url": "https://www.pcc.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMjk3L2NrZmlsZS8zMTE0ZTU5Ni0zOGIwLTQ2OGYtODM1Yy00YWJkNzc1NmFjMGIucGRm&n=SlAwMeacque2k%2bWFrOWRiueoi%2bW6j%2bS5i%2bmZkOWItuaAp%2baLm%2baomS3kv67mraPlvowtZmluYWwucGRm&icon=.pdf",
+      "pages": 6,
+      "chunks": 12,
+      "sha256": "63ce54329f0445c25a80c013ce2da3974b26713da6043079ead3210f53b70d90"
+    },
+    {
+      "document_id": "pcc-jp03",
+      "title": "開標作業",
+      "version": "2021-12",
+      "source_url": "https://www.pcc.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMjk3L2NrZmlsZS8wMTIxODUzZi1mNTMyLTQyZWUtOGVlNC0wNGIwZmE2N2I3OWQucGRm&n=6ZaL5qiZ5L2c5qWtKDIwMjExMjIz5LiK5p62KS5wZGY%3d&icon=.pdf",
+      "pages": 5,
+      "chunks": 10,
+      "sha256": "6dcf2365febddb0b23339325d493f680f81dffeb693936e63d36dbdfc7486ff0"
+    }
+  ]
+}

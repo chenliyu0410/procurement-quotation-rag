@@ -35,4 +35,4 @@ class CaseRepository:
         cases = self.session.scalars(statement.order_by(date_column.desc(), ProcurementCase.id).limit(limit)).all()
         return [CaseResult(id=item.id, agency=item.agency, case_name=item.case_name, category=item.category_normalized,
             budget_amount=item.budget_amount, award_amount=item.award_amount, announcement_date=item.announcement_date,
-            expected_tender_date=item.expected_tender_date, source_url=item.source_url) for item in cases]
+            expected_tender_date=item.expected_tender_date, source_url=item.source_url, source_period=item.source_period) for item in cases]

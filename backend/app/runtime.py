@@ -70,7 +70,8 @@ class RuntimeRetriever:
             cases.append(Evidence(id=f"case:{row.id}", kind="case", title=row.case_name,
                 text=f"{row.case_name}；機關：{row.agency}；預算：{row.budget_amount}；決標：{row.award_amount}",
                 case_id=row.id, source_url=row.source_url, score=scores.get(row.id, 0.), metadata=metadata))
-        return EvidenceBundle(cases=cases, documents=chunks, price_reference=price)
+        return EvidenceBundle(cases=cases, documents=chunks, price_reference=price,
+                              applied_filters=filters if not documents else None)
 
 
 def build_query_service(settings: Settings):

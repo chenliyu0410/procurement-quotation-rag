@@ -27,7 +27,8 @@ SOURCES = {
 def main() -> None:
     parser = argparse.ArgumentParser(description="Procurement data administration")
     commands = parser.add_subparsers(dest="command", required=True)
-    commands.add_parser("sync-case-vectors", help="Index all active cases and remove inactive vectors")
+    case_vectors = commands.add_parser("sync-case-vectors", help="Index all active cases and remove inactive vectors")
+    case_vectors.add_argument("--source", choices=tuple(SOURCES), help="Limit embedding and inactive deletion to one source")
     sync = commands.add_parser("sync-cases")
     sync.add_argument("--source", required=True, choices=("work-bureau", "metro"))
     sync.add_argument("--resource-url", required=True)
@@ -48,7 +49,10 @@ def main() -> None:
                                            settings.embedding_dimension, settings.llm_base_url)
         vectors = QdrantVectorIndex(QdrantClient(url=settings.qdrant_url, api_key=settings.qdrant_api_key or None))
         with build_session_factory()() as session:
-            result = sync_case_vectors(session.scalars(select(ProcurementCase)).all(), embedder, vectors, settings.index_schema_version)
+            statement = select(ProcurementCase)
+            if args.source:
+                statement = statement.where(ProcurementCase.source_dataset == args.source)
+            result = sync_case_vectors(session.scalars(statement).all(), embedder, vectors, settings.index_schema_version)
         print(f"案件向量同步完成: upserted={result.upserted}, deleted={result.deleted}, collection={result.collection}")
         return
     if args.command == "sync-documents":
@@ -68,7 +72,8 @@ def main() -> None:
         snapshot = fetch_api(args.resource_url)
         checksum, resource_id = snapshot.checksum, snapshot.resource_id
         records = [replace(normalizer(row, source_period=args.period, source_url=args.resource_url),
-                           source_record_id=f"{resource_id}:{row['_id']}") for row in snapshot.rows]
+                           source_record_id=f"{resource_id}:{row['_id']}" if args.source == "work-bureau" else None)
+                   for row in snapshot.rows]
     else:
         content, checksum = download(args.resource_url)
         records = parse_csv(content, normalizer, source_period=args.period, source_url=args.resource_url)

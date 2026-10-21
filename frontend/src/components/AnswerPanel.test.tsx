@@ -9,6 +9,6 @@ describe("AnswerPanel", () => {
       citations: [{ evidence_id: "chunk:1", source_url: "https://example.test/manual", page_number: 2 }] }}/>);
     expect(screen.getByText(/樣本不足/)).toBeInTheDocument();
     expect(screen.getByText("缺少規格")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /第 2 頁/ })).toHaveAttribute("href", "https://example.test/manual");
+    expect(screen.getByRole("link", { name: /第 2 頁/ })).toHaveAttribute("href", "https://example.test/manual#page=2");
   });
 });

@@ -70,3 +70,8 @@ def test_explicit_filters_outside_quoted_title_are_preserved():
 ])
 def test_quoted_hard_conditions_are_not_discarded(question, field, expected):
     assert getattr(QueryParser().parse(question), field) == expected
+
+
+@pytest.mark.parametrize("question", ["找捷運公司預算1000萬以下的案件", "查詢捷運公司預算1000萬以下的案件"])
+def test_metro_publisher_alias_matches_the_stored_agency(question):
+    assert QueryParser().parse(question).agency == "臺北大眾捷運股份有限公司"
