@@ -81,9 +81,58 @@ async def test_openai_provider_parses_structured_output_without_network():
     assert answer.answer == "資料不足"
 
 
+@pytest.mark.anyio
+async def test_optional_reasoning_effort_is_sent_only_when_configured():
+    import json
+    from app.answering.openai import OpenAIAnswerProvider
+    bodies = []
+
+    def handler(request):
+        bodies.append(json.loads(request.content))
+        return httpx.Response(200, json={"status": "completed", "output": [{"type": "message", "content": [
+            {"type": "output_text", "text": '{"answer":"資料不足","citations":[],"limitations":[]}'}]}]})
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        for effort in ("", "minimal"):
+            settings = Settings(llm_api_key="test", llm_model="configured-model", llm_reasoning_effort=effort)
+            await OpenAIAnswerProvider(settings, client).generate(GroundedAnswerRequest(question="查詢", evidence=EvidenceBundle()))
+    assert "reasoning" not in bodies[0]
+    assert bodies[1]["reasoning"] == {"effort": "minimal"}
+
+
 def test_configured_factory_installs_runtime_service():
     from app.runtime import build_query_service
     from app.answering.service import QueryService
 
     assert isinstance(build_query_service(Settings(llm_api_key="test", llm_model="configured-model",
                        embedding_model="configured-embedding")), QueryService)
+
+
+@pytest.mark.anyio
+async def test_semantic_target_beyond_sql_first_200_is_returned_and_filters_still_apply():
+    from sqlalchemy import select
+    from app.runtime import RuntimeRetriever
+    from app.retrieval.sync_case_vectors import sync_case_vectors
+
+    factory, vectors = database(), MemoryVectorIndex()
+    with factory() as session:
+        for i in range(220):
+            session.add(ProcurementCase(id=f"filler-{i:03}", source_dataset="fixture", agency="工務局",
+                case_name="其他案件", category_normalized="資訊服務", budget_amount=1000,
+                announcement_date=date(2026, 1, 1), source_row_hash=str(i), source_url="https://example.org"))
+        session.add(ProcurementCase(id="zz-target", source_dataset="fixture", agency="工務局",
+            case_name="積水預警預報工作", category_normalized="資訊服務", budget_amount=100,
+            announcement_date=None, source_row_hash="target", source_url="https://example.org"))
+        session.commit()
+
+    class SemanticEmbedder(Embedder):
+        def embed(self, texts):
+            return [[1., 0.] if "積水預警預報" in text else [0., 1.] for text in texts]
+
+    with factory() as session:
+        sync_case_vectors(session.scalars(select(ProcurementCase)).all(), SemanticEmbedder(), vectors, "v1")
+    retriever = RuntimeRetriever(factory, SemanticEmbedder(), vectors, "v1")
+    result = await retriever.retrieve("找與積水預警預報工作相似的案件")
+    assert result.cases[0].case_id == "zz-target"
+    restricted = await retriever.retrieve("找與積水預警預報工作相似的案件，預算50元以下")
+    assert restricted.cases == []

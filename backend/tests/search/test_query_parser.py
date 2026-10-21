@@ -49,3 +49,24 @@ def test_money_range_allows_yuan_on_both_sides():
     assert value.min_amount == 3000000
     assert value.max_amount == 5000000
     assert value.category == "資訊服務"
+
+
+def test_quoted_case_title_does_not_turn_title_year_into_date_filter():
+    value = QueryParser().parse("找與「114年度續約-臺北市積水預警預報工作」相似的案件")
+    assert value.start_date is value.end_date is None
+
+
+def test_explicit_filters_outside_quoted_title_are_preserved():
+    value = QueryParser().parse("找民國113年與「114年度設備300萬元採購案」相似，預算500萬以下的案件")
+    assert value.start_date.isoformat() == "2024-01-01"
+    assert value.end_date.isoformat() == "2024-12-31"
+    assert value.max_amount == 5000000
+
+
+@pytest.mark.parametrize("question,field,expected", [
+    ("找「工務局」決標500萬以下的案件", "agency", "工務局"),
+    ("找分類為「資訊服務」的案件", "category", "資訊服務"),
+    ("找預算「300萬到500萬」的案件", "min_amount", Decimal("3000000")),
+])
+def test_quoted_hard_conditions_are_not_discarded(question, field, expected):
+    assert getattr(QueryParser().parse(question), field) == expected

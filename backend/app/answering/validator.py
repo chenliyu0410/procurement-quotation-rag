@@ -1,4 +1,5 @@
 import re
+from decimal import Decimal
 
 from app.answering.provider import Citation, DraftAnswer
 from app.retrieval.schemas import EvidenceBundle
@@ -9,7 +10,8 @@ class AnswerValidationError(ValueError):
 
 
 def _numbers(text: str) -> set[str]:
-    return {value.replace(",", "") for value in re.findall(r"\d[\d,]*(?:\.\d+)?", text)}
+    return {format(Decimal(value.replace(",", "")).normalize(), "f")
+            for value in re.findall(r"\d[\d,]*(?:\.\d+)?", text)}
 
 
 def validate_answer(draft: DraftAnswer, evidence: EvidenceBundle) -> DraftAnswer:

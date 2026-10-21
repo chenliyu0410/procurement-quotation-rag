@@ -41,3 +41,10 @@ def test_amount_must_be_supported_by_cited_evidence():
     evidence.cases.append(Evidence(id="case:b", kind="case", title="B", text="決標200元", source_url="url"))
     with pytest.raises(AnswerValidationError):
         validate_answer(DraftAnswer(answer="A決標200元", citations=[Citation(evidence_id="case:a")]), evidence)
+
+
+def test_equivalent_decimal_money_formats_are_accepted():
+    evidence = EvidenceBundle(cases=[Evidence(id="case:a", kind="case", title="檢修案",
+        text="決標金額216300.00元", source_url="https://example.org", metadata={"award_amount": "216300.00"})])
+    draft = DraftAnswer(answer="決標金額216,300元", citations=[Citation(evidence_id="case:a")])
+    assert validate_answer(draft, evidence).answer == draft.answer

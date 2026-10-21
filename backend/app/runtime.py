@@ -37,9 +37,7 @@ class RuntimeRetriever:
         pricing = any(word in question for word in ("區間", "歷史金額", "報價", "價格"))
         documents = any(word in question for word in ("手冊", "程序", "規範", "招決標方式", "同質", "異質"))
         semantic = pricing or documents or any(word in question for word in ("相似", "類似"))
-        with self.sessions() as session:
-            rows = CaseRepository(session).search(filters, limit=200)
-        selected = rows
+        selected = []
         chunks = []
         scores = {}
         if semantic:
@@ -48,11 +46,16 @@ class RuntimeRetriever:
                 metadata = {"category_normalized": filters.category} if filters.category else {}
                 ranked = self.repository.search_cases(vector, metadata, limit=200)
                 scores = {item.case_id: item.score for item in ranked}
+                with self.sessions() as session:
+                    rows = CaseRepository(session).search(filters, limit=200, case_ids=list(scores))
                 selected = sorted((row for row in rows if row.id in scores), key=lambda row: (-scores[row.id], row.id))
             else:
                 selected = []
                 seeds = self.repository.search_chunks(vector, {}, limit=3)
                 chunks = ContextualRetriever(self.vectors).expand(seeds) if seeds else []
+        else:
+            with self.sessions() as session:
+                selected = CaseRepository(session).search(filters, limit=200)
         price = None
         if pricing and filters.category:
             candidates = [SimpleNamespace(**{**row.model_dump(), "category_normalized": row.category,

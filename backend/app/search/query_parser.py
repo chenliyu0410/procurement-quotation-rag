@@ -29,6 +29,9 @@ def _amount(raw: str, unit: str) -> Decimal:
 
 class QueryParser:
     def parse(self, question: str) -> CaseFilters:
+        # A quoted title before "similar" is retrieval text. Quoted agency,
+        # category and amount conditions elsewhere must still be parsed.
+        question = re.sub(r'(?:「[^」]*」|『[^』]*』|"[^"]*")(?=\s*(?:相似|類似))', " ", question)
         question = question.replace("萬元", "萬").replace("億元", "億")
         values: dict[str, object] = {"amount_kind": "budget" if "預算" in question else "award"}
         range_match = re.search(r"([\d,.]+|[零一二兩三四五六七八九十]+)\s*(萬|億)?\s*(?:到|至|～|~)\s*([\d,.]+|[零一二兩三四五六七八九十]+)\s*(萬|億)?", question)
@@ -37,7 +40,7 @@ class QueryParser:
             values["min_amount"] = _amount(range_match.group(1), left_unit)
             values["max_amount"] = _amount(range_match.group(3), right_unit)
         else:
-            bound = re.search(r"([\d,.]+|[零一二兩三四五六七八九十]+)\s*(萬|億)?\s*(以下|以內|以上)", question)
+            bound = re.search(r"([\d,.]+|[零一二兩三四五六七八九十]+)\s*(萬|億)?\s*元?\s*(以下|以內|以上)", question)
             if bound:
                 values["max_amount" if bound.group(3) in ("以下", "以內") else "min_amount"] = _amount(bound.group(1), bound.group(2) or "")
 

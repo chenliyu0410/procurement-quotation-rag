@@ -1,0 +1,106 @@
+{
+  "kind": "live_smoke_not_quality_benchmark",
+  "tested_at": "2026-10-21T02:33:12.008137+00:00",
+  "models": {
+    "answer": "gpt-5-mini",
+    "reasoning_effort": "minimal",
+    "embedding": "text-embedding-3-small",
+    "dimension": 1536
+  },
+  "index_integrity": {
+    "active_sql_records": 1043,
+    "qdrant_points": 1043,
+    "point_ids_match_all_active_records": true
+  },
+  "sample_count": 2,
+  "samples": [
+    {
+      "question": "找與「北安抽水站抽水機引擎熱交換器檢修案」相似的案件",
+      "http_status": 200,
+      "result_status": "ready",
+      "exact_target_in_top10": true,
+      "case_count": 10,
+      "citation_count": 3,
+      "latency_ms": 4553,
+      "answer": "相似案件（同機關、同類型抽水站機械檢修/保養）：北安抽水站2號抽水機熱交換器檢修案（決標216300.00）；洲美一抽水站1號抽水機離合器檢修案（決標980000.00）；迪化抽水站4號抽水機散熱水箱檢修案（決標181650.00）。",
+      "limitations": [],
+      "expected_case_id": "001b6c07438e1f87c3356a1ef64e9abf3e6316c938109130b5271c91d5e74e6e",
+      "returned_case_ids": [
+        "001b6c07438e1f87c3356a1ef64e9abf3e6316c938109130b5271c91d5e74e6e",
+        "a4cf147cbb8eaa262d66030999bd99d2ff0975904115dcbe13c7acb219159d9c",
+        "e524e78fbd9c6d35fdedd0e7dc86fa928e1788760ebab0128d3f0e0ad0a7d0a9",
+        "90125eff0d673152d2672a70e7696f45b040060d255b8c5d2c4808d64b77e415",
+        "b75448f2dabbf6ace5793d0a894ffd2b4a347bed725ac12befcffb1503bfaf23",
+        "eb5f50c6c7a80336c5c348e1dc093fae2b1d8e0cceabf7670c619cc5fea1833d",
+        "955d10b2353ae287b94a31644ccbb8c01ef49416c6545239bd4c641865655c53",
+        "98ec4914aa8e576df2b423df86dbed1142ddb89c36259bf3e9d3432a2d12a384",
+        "53ed18aae148f997ead9bf65b67e444b2e903e1c271fcab53b11fefaabb4cced",
+        "c33ced1ee7b2339e193fe3c654a4c70724e395e621eb575376e5999616eeec7b"
+      ],
+      "citations": [
+        {
+          "evidence_id": "case:a4cf147cbb8eaa262d66030999bd99d2ff0975904115dcbe13c7acb219159d9c",
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "page_number": null
+        },
+        {
+          "evidence_id": "case:e524e78fbd9c6d35fdedd0e7dc86fa928e1788760ebab0128d3f0e0ad0a7d0a9",
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "page_number": null
+        },
+        {
+          "evidence_id": "case:98ec4914aa8e576df2b423df86dbed1142ddb89c36259bf3e9d3432a2d12a384",
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "page_number": null
+        }
+      ]
+    },
+    {
+      "question": "找與「114年度續約-臺北市積水預警預報工作」相似的案件",
+      "http_status": 200,
+      "result_status": "ready",
+      "exact_target_in_top10": true,
+      "case_count": 10,
+      "citation_count": 3,
+      "latency_ms": 4821,
+      "answer": "以下與「114年度續約-臺北市積水預警預報工作」最相似的案件，依相關性挑出三筆，並列出主要資訊：\n\n114年度續約-臺北市河川水位預警機制分析暨水情研判諮詢委託技術服務案；機關：臺北市政府工務局水利工程處；決標：4150000.00",
+      "limitations": [
+        "僅根據提供之案件清單比對相似性；若需更多候選案或不同排序條件（如金額、類別、公告日期），請提供額外篩選條件或完整資料來源。"
+      ],
+      "expected_case_id": "ffdcae64e8f308222eb8c69e91099c079734f2f94c519aec1b41be8e8ae91944",
+      "returned_case_ids": [
+        "ffdcae64e8f308222eb8c69e91099c079734f2f94c519aec1b41be8e8ae91944",
+        "0a1d0dab5267149a5ac6dd0af8154b7450c5be190a41daa7c08855ec497f0d87",
+        "4507256fda96eace7b8b89ccdc7aa7b3bc19980da35da89065fc6ec6ec4285f5",
+        "52030d5bb36c140467b03d6ba83b5cd51526b0fd8e07811aa75455f88623144e",
+        "a4f47b9a038c95607927826dc4f4b8b847325c2fa807a9840f6dcb8b6c525316",
+        "89301ea2b3848d8571f7fdd87c80b301f112aaf88df1a433e85c407921624d3f",
+        "b982821b3ce9e94cee5d2da0ddd6e245d156ddbf2e9126b5067a7653d8c79538",
+        "d1bc07c4a5c942d5f07a11079050028d5145dc74d1475c62b6498aee6c918baf",
+        "053b93d879720e8f80bddcfe0a90b9beaa0853f9fbc2176918109fba1469ac05",
+        "393bfa008a100b0538bc31930dc23659040ebb69b5cc133f2975db044108b1e6"
+      ],
+      "citations": [
+        {
+          "evidence_id": "case:0a1d0dab5267149a5ac6dd0af8154b7450c5be190a41daa7c08855ec497f0d87",
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "page_number": null
+        },
+        {
+          "evidence_id": "case:ffdcae64e8f308222eb8c69e91099c079734f2f94c519aec1b41be8e8ae91944",
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "page_number": null
+        },
+        {
+          "evidence_id": "case:393bfa008a100b0538bc31930dc23659040ebb69b5cc133f2975db044108b1e6",
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "page_number": null
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Only two known-target queries were checked; this is not Recall@5 or P95 evaluation.",
+    "Award dates remain unknown for this source; five-year pricing is not validated."
+  ]
+}

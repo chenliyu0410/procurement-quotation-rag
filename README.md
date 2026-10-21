@@ -2,7 +2,7 @@
 
 以臺北市資料大平臺公開採購資料建立的作品集 RAG 專案。系統將可驗證的 SQL 條件查詢、Qdrant 語意搜尋、採購文件問答與歷史決標金額統計放在同一個介面，回答中的案件、金額與文件頁碼都必須能追溯來源。
 
-目前已完成模組與查詢流程接線、真實模型連線測試，並匯入工務局 API 的 1,043 筆決標紀錄。本地整合測試與連線測試不代表已通過正式公開資料評測；案件向量、其他資料源、人工評測及公開部署仍待完成。詳細交接見 [docs/progress.md](docs/progress.md)。
+目前已完成模組與查詢流程接線、真實模型連線測試，並匯入及建立工務局 API 的 1,043 筆案件向量。兩筆實際相似查詢已通過目標檢索與引用檢查，紀錄見 [live-case-smoke.json](backend/evals/live-case-smoke.json)。這不代表已通過正式題庫評測；其他資料源、人工評測及公開部署仍待完成。詳細交接見 [docs/progress.md](docs/progress.md)。
 
 ## 能力展示
 
@@ -72,6 +72,8 @@ API reader 以 `limit=1000`、`offset` 與 `_id` 排序完整分頁下載，再�
 
 模型 adapter 依 [OpenAI Structured Outputs 文件](https://developers.openai.com/api/docs/guides/structured-outputs) 使用 Responses API JSON schema；請選擇帳號可使用且支援該格式的模型。
 
+推理模型可選填 `LLM_REASONING_EFFORT`，留空時不傳送此參數。這次本機 `gpt-5-mini` 使用 `minimal`，以降低簡短查詢的等待時間；不同模型的可用值不同，見 [OpenAI 官方更新紀錄](https://developers.openai.com/api/docs/changelog)。引用 schema 只允許當次 evidence ID，仍會執行後端白名單與數值驗證。
+
 ## Docker 啟動
 
 在專案根目錄準備 `.env` 後：
@@ -107,6 +109,6 @@ GitHub Actions 會執行後端測試、前端測試、正式建置、Compose 設
 
 ## 限制
 
-公開資料通常缺少規格、數量、工期與風險條件，因此價格結果只稱為「歷史決標金額參考區間」，不能作為正式投標報價。掃描 PDF 第一版不做 OCR。查詢目前最多在 200 筆 SQL 候選與 200 筆向量候選中交集篩選；不保證大型資料集的全域最佳相似結果。價格查詢需指定分類。引用驗證無法保證每句敘述及數字與案件的語意對應正確，仍需人工評測。正式公開網址：`待部署後補上`。
+公開資料通常缺少規格、數量、工期與風險條件，因此價格結果只稱為「歷史決標金額參考區間」，不能作為正式投標報價。掃描 PDF 第一版不做 OCR。語意查詢先從全體向量取最多 200 筆候選，再由 SQL 套用硬條件與有效狀態，最後依相似度排序；不再先截斷 SQL 前 200 筆。較嚴格的硬條件仍可能因向量候選上限而漏掉結果。價格查詢需指定分類。引用驗證無法保證每句敘述及數字與案件的語意對應正確，仍需人工評測。正式公開網址：`待部署後補上`。
 
 面試展示步驟見 [docs/demo-script.md](docs/demo-script.md)，設計與完整實作計畫位於 `docs/superpowers/`。
