@@ -15,6 +15,8 @@
 - [x] Import 52 rows twice; index only metro additions; verify counts and stable IDs.
 - [x] Visually inspect procedure PDFs, preserve local sources, index, rerun unchanged sync to verify embedding skip.
 - [x] Test a real budget query and two procedure questions with source URL/page citations. Record measurements as smoke checks rather than full evaluation.
-- [ ] Review, update source/progress records, commit/push, and verify CI.
+- [x] Review, update source/progress records, commit/push, and verify CI.
 
 Final review found filter-echo matching inside negated clauses and before trailing comparators. Four failing regression cases were added, then fixed with callback clause checks that avoid regex backtracking. Backend: 95 passed. Frontend: 8 passed and production build succeeded.
+
+Implementation commit ad51eb8 passed GitHub Actions run 39559206065 (backend tests, frontend tests/build, Compose validation and backend Docker image build).
