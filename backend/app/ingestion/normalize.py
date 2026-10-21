@@ -27,6 +27,7 @@ class CaseRecord:
     expected_tender_date: date | None
     source_period: str
     source_url: str
+    source_record_id: str | None = None
 
     def row_hash(self) -> str:
         payload = json.dumps(asdict(self), ensure_ascii=False, sort_keys=True, default=str)

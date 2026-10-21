@@ -14,6 +14,7 @@ dependencies = [
   "qdrant-client>=1.15,<1.16",
   "sqlalchemy>=2.0,<3.0",
   "tzdata>=2024.1",
+  "truststore>=0.10,<1.0",
   "uvicorn[standard]>=0.32,<1.0",
 ]
 

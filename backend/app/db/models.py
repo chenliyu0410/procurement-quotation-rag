@@ -28,6 +28,7 @@ class ProcurementCase(Base):
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     source_dataset: Mapped[str] = mapped_column(String(100), index=True)
+    source_record_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
     case_number_raw: Mapped[str | None] = mapped_column(String(255), nullable=True)
     agency: Mapped[str] = mapped_column(String(255), index=True)
     case_name: Mapped[str] = mapped_column(Text)

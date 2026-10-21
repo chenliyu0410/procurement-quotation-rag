@@ -58,7 +58,8 @@ def sync_cases(source: SourceConfig, session: Session) -> SyncSummary:
     changed = 0
     try:
         for record in records:
-            case_id = build_case_identity(record.source_dataset, record.case_number_raw, record.agency, record.case_name, _period_year(record))
+            case_id = build_case_identity(record.source_dataset, record.case_number_raw, record.agency, record.case_name,
+                                          _period_year(record), record.source_record_id)
             seen_ids.add(case_id)
             current = session.get(ProcurementCase, case_id)
             if current is not None and current.source_period > record.source_period:
@@ -71,7 +72,7 @@ def sync_cases(source: SourceConfig, session: Session) -> SyncSummary:
                 session.add(current)
             if current.source_row_hash != row_hash or not current.is_active:
                 changed += 1
-            for field in ("case_number_raw", "agency", "case_name", "category_raw", "category_normalized",
+            for field in ("source_record_id", "case_number_raw", "agency", "case_name", "category_raw", "category_normalized",
                           "budget_amount", "award_amount", "announcement_date", "expected_tender_date", "source_period", "source_url"):
                 setattr(current, field, getattr(record, field))
             current.source_row_hash, current.is_active, current.ingested_at = row_hash, True, started

@@ -2,6 +2,17 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 
 
+@pytest.fixture(autouse=True)
+def isolate_model_configuration(monkeypatch):
+    # A developer's populated .env must not turn unit tests into paid API requests.
+    from app.config import get_settings
+    for name in ("LLM_API_KEY", "LLM_MODEL", "EMBEDDING_MODEL"):
+        monkeypatch.setenv(name, "")
+    get_settings.cache_clear()
+    yield
+    get_settings.cache_clear()
+
+
 @pytest.fixture
 def anyio_backend() -> str:
     return "asyncio"

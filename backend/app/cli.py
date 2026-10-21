@@ -1,4 +1,5 @@
 import argparse
+from dataclasses import replace
 from pathlib import Path
 from sqlalchemy import select
 
@@ -8,7 +9,7 @@ from app.config import get_settings
 from app.db.session import build_session_factory
 from app.db.models import ProcurementCase
 from app.retrieval.sync_case_vectors import sync_case_vectors
-from app.ingestion.data_taipei import parse_csv
+from app.ingestion.data_taipei import fetch_api, parse_csv
 from app.ingestion.http import download
 from app.ingestion.normalize import normalize_metro_tender, normalize_work_bureau
 from app.ingestion.sync_cases import SourceConfig, sync_cases
@@ -31,6 +32,8 @@ def main() -> None:
     sync.add_argument("--source", required=True, choices=("work-bureau", "metro"))
     sync.add_argument("--resource-url", required=True)
     sync.add_argument("--period", required=True)
+    sync.add_argument("--format", choices=("csv", "api"), default="csv")
+    sync.add_argument("--dry-run", action="store_true", help="Download and normalize without database writes")
     documents = commands.add_parser("sync-documents")
     documents.add_argument("path", type=Path)
     documents.add_argument("--document-id", required=True)
@@ -61,9 +64,19 @@ def main() -> None:
         print(f"文件同步完成: changed={result.changed}, chunks={result.chunk_count}, collection={result.collection}")
         return
     name, normalizer, snapshot_mode = SOURCES[args.source]
-    content, checksum = download(args.resource_url)
-    records = parse_csv(content, normalizer, source_period=args.period, source_url=args.resource_url)
-    resource_id = args.resource_url.rstrip("/").split("/")[-2] if "/resource/" in args.resource_url else checksum[:12]
+    if args.format == "api":
+        snapshot = fetch_api(args.resource_url)
+        checksum, resource_id = snapshot.checksum, snapshot.resource_id
+        records = [replace(normalizer(row, source_period=args.period, source_url=args.resource_url),
+                           source_record_id=f"{resource_id}:{row['_id']}") for row in snapshot.rows]
+    else:
+        content, checksum = download(args.resource_url)
+        records = parse_csv(content, normalizer, source_period=args.period, source_url=args.resource_url)
+        resource_id = args.resource_url.rstrip("/").split("/")[-2] if "/resource/" in args.resource_url else checksum[:12]
+    if args.dry_run:
+        print(f"Dry run: records={len(records)}, resource_id={resource_id}, "
+              f"missing_award_dates={sum(item.announcement_date is None for item in records)}")
+        return
     factory = build_session_factory()
     with factory() as session:
         summary = sync_cases(SourceConfig(args.source, name, args.resource_url, snapshot_mode, resource_id,

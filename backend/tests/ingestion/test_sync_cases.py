@@ -1,5 +1,6 @@
 from datetime import date
 from decimal import Decimal
+from dataclasses import replace
 
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
@@ -45,3 +46,19 @@ def test_snapshot_source_soft_deletes_missing_rows():
         sync_cases(SourceConfig("demo", "Demo", "https://example.test", True, "r1", "2024-01", [record("2024-01")]), session)
         sync_cases(SourceConfig("demo", "Demo", "https://example.test", True, "r2", "2024-02", []), session)
         assert session.scalar(select(ProcurementCase)).is_active is False
+
+
+def test_api_award_rows_with_shared_case_number_are_preserved_and_idempotent():
+    engine = create_engine("sqlite+pysqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    rows = [replace(record("2026-05", str(amount)), source_record_id=f"resource:{index}")
+            for index, amount in enumerate((100, 200, 200), start=1)]
+    source = SourceConfig("demo", "Demo", "https://example.test/api", False, "resource", "2026-05", rows)
+    with Session(engine) as session:
+        sync_cases(source, session)
+        second = sync_cases(source, session)
+        cases = session.scalars(select(ProcurementCase)).all()
+        assert len(cases) == 3
+        assert second.changed == 0
+        assert {case.case_number_raw for case in cases} == {"A-1"}
+        assert {case.source_record_id for case in cases} == {"resource:1", "resource:2", "resource:3"}

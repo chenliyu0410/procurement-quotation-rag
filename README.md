@@ -2,7 +2,7 @@
 
 以臺北市資料大平臺公開採購資料建立的作品集 RAG 專案。系統將可驗證的 SQL 條件查詢、Qdrant 語意搜尋、採購文件問答與歷史決標金額統計放在同一個介面，回答中的案件、金額與文件頁碼都必須能追溯來源。
 
-目前已完成模組與查詢流程接線；本地整合測試使用固定資料與模擬模型，不代表已通過正式公開資料評測。尚待匯入實際資料、設定個人模型 API、人工評測及公開部署。詳細交接見 [docs/progress.md](docs/progress.md)。
+目前已完成模組與查詢流程接線、真實模型連線測試，並匯入工務局 API 的 1,043 筆決標紀錄。本地整合測試與連線測試不代表已通過正式公開資料評測；案件向量、其他資料源、人工評測及公開部署仍待完成。詳細交接見 [docs/progress.md](docs/progress.md)。
 
 ## 能力展示
 
@@ -56,6 +56,17 @@ python -m app.cli sync-cases --source work-bureau --resource-url <官方CSV下�
 python -m app.cli sync-case-vectors
 python -m app.cli sync-documents <採購手冊.pdf> --document-id procurement-manual --source-url <官方網址>
 ```
+
+也可直接同步官方 JSON API，無需手動下載 CSV：
+
+```bash
+python -m app.cli sync-cases --source work-bureau --format api --resource-url "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire" --period 2026-05 --dry-run
+python -m app.cli sync-cases --source work-bureau --format api --resource-url "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire" --period 2026-05
+```
+
+API reader 以 `limit=1000`、`offset` 與 `_id` 排序完整分頁下載，再進行正規化與交易寫入；空頁、重複列、筆數異動或 HTTP 錯誤會中止同步。`--dry-run` 不連接資料庫。系統憑證庫負責 TLS 驗證，且不跟隨重新導向。`--period` 是來源快照期別，不是決標日期。
+
+2026-10-21 實測上述資源為 1,043 筆決標紀錄；相同案號可能屬於不同機關或多筆決標，因此 API 列採 `resource_id + _id` 識別並保留原始案號，重跑相同快照不增加筆數。平台重新匯入時若重編 `_id`，仍需人工比對；這不是跨資源／跨期的自然案件主鍵。這支 API 沒有決標日期，全部維持空值，不能用 `_importdate` 冒充，因此這批資料不能直接支援「近五年決標金額」統計。多筆決標紀錄也不能當成獨立標案做價格樣本。
 
 上述 CLI 與 Alembic 會讀取工作目錄中的 `.env`。在 `backend/` 執行時，請先把根目錄 `.env` 複製到 `backend/.env`，或以 shell 設定環境變數。同步文件與案件向量會呼叫設定的 embedding API；`EMBEDDING_DIMENSION` 預設為 1536，文件命令的 `--dimension` 必須與查詢使用的設定相同。尚未設定模型時，查詢 API 會回傳 `configuration_required`。
 
