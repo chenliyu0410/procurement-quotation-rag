@@ -29,6 +29,7 @@ def _amount(raw: str, unit: str) -> Decimal:
 
 class QueryParser:
     def parse(self, question: str) -> CaseFilters:
+        question = question.replace("萬元", "萬").replace("億元", "億")
         values: dict[str, object] = {"amount_kind": "budget" if "預算" in question else "award"}
         range_match = re.search(r"([\d,.]+|[零一二兩三四五六七八九十]+)\s*(萬|億)?\s*(?:到|至|～|~)\s*([\d,.]+|[零一二兩三四五六七八九十]+)\s*(萬|億)?", question)
         if range_match:
@@ -47,11 +48,21 @@ class QueryParser:
             values["start_date"] = date(year, start_month, 1)
             values["end_date"] = date(year, end_month, calendar.monthrange(year, end_month)[1])
 
+        if not dates:
+            year_match = re.search(r"(?:民國)?(\d{2,4})年", question)
+            if year_match:
+                year = int(year_match.group(1))
+                year = year + 1911 if year < 1911 else year
+                values.update(start_date=date(year, 1, 1), end_date=date(year, 12, 31))
+
+        if "資訊設備" in question:
+            values["category"] = "資訊服務"
         for category in ("資訊服務", "工程", "財物", "勞務", "其他"):
             if category in question:
                 values["category"] = category
                 break
-        agency = re.search(r"([\u4e00-\u9fff]{2,20}(?:局|處|公司|機關))", question)
+        agency_text = re.sub(r"(?:民國)?\d{2,4}年(?:\d{1,2}月)?", " ", question)
+        agency = re.search(r"([\u4e00-\u9fff]{2,20}(?:局|處|公司|機關))", agency_text)
         if agency:
             values["agency"] = agency.group(1).removeprefix("找")
         try:

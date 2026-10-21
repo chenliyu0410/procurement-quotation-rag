@@ -95,6 +95,8 @@ class QdrantVectorIndex:
         self.client.delete(collection, selector, wait=True)
 
     def search(self, collection: str, vector: list[float], filters: dict[str, Any], limit: int):
+        if not self.client.collection_exists(collection):
+            return []
         query_filter = models.Filter(must=[models.FieldCondition(key=key, match=models.MatchValue(value=value)) for key, value in filters.items()]) if filters else None
         response = self.client.query_points(collection, query=vector, query_filter=query_filter, limit=limit, with_payload=True)
         return [(VectorPoint(str(point.id), [], dict(point.payload or {})), float(point.score)) for point in response.points]

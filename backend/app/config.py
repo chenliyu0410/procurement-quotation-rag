@@ -9,9 +9,13 @@ class Settings(BaseSettings):
     qdrant_api_key: str = ""
     llm_api_key: str = ""
     llm_model: str = ""
+    llm_base_url: str = "https://api.openai.com/v1"
+    llm_timeout_seconds: float = 20.0
+    embedding_dimension: int = 1536
     embedding_provider: str = "openai"
     embedding_model: str = ""
     index_schema_version: str = "v1"
+    cors_origins: list[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

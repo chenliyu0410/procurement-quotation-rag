@@ -2,6 +2,7 @@ from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel, Field
+from app.analysis.schemas import PriceReference
 
 
 class QueryIntent(StrEnum):
@@ -25,3 +26,4 @@ class Evidence(BaseModel):
 class EvidenceBundle(BaseModel):
     cases: list[Evidence] = Field(default_factory=list)
     documents: list[Evidence] = Field(default_factory=list)
+    price_reference: PriceReference | None = None

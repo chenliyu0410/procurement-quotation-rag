@@ -1,0 +1,9 @@
+FROM python:3.13-slim
+WORKDIR /app
+COPY backend/pyproject.toml ./
+COPY backend/app ./app
+COPY backend/alembic ./alembic
+COPY backend/alembic.ini ./alembic.ini
+RUN --mount=type=cache,target=/root/.cache/pip pip install .
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

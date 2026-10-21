@@ -1,0 +1,21 @@
+{
+  "mode": "annotation_summary",
+  "count": 10,
+  "metrics": {
+    "structured_accuracy": null,
+    "citation_validity": null,
+    "recall_at_5": null,
+    "groundedness": null,
+    "refusal_accuracy": null,
+    "latency_p95_ms": null
+  },
+  "measurement_counts": {
+    "structured_accuracy": 0,
+    "citation_validity": 0,
+    "recall_at_5": 0,
+    "groundedness": 0,
+    "refusal_accuracy": 0,
+    "latency_p95_ms": 0
+  },
+  "note": "No model calls are made. Null means unmeasured; this is not a live quality benchmark."
+}

@@ -1,6 +1,10 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.query import router as query_router
+from app.api.sources import router as sources_router
+from app.db.session import build_session_factory
+from app.config import get_settings
 
 
 class UnconfiguredQueryService:
@@ -11,12 +15,17 @@ class UnconfiguredQueryService:
 
 
 def create_app(query_service=None) -> FastAPI:
+    from app.runtime import build_query_service
     app = FastAPI(
         title="Procurement & Quotation Knowledge Assistant",
         version="0.1.0",
     )
-    app.state.query_service = query_service or UnconfiguredQueryService()
+    app.state.query_service = query_service if query_service is not None else (build_query_service(get_settings()) or UnconfiguredQueryService())
+    app.state.session_factory = build_session_factory()
+    app.add_middleware(CORSMiddleware, allow_origins=get_settings().cors_origins,
+                       allow_methods=["POST", "GET"], allow_headers=["Content-Type"])
     app.include_router(query_router)
+    app.include_router(sources_router)
 
     @app.get("/health")
     def health() -> dict[str, str]:

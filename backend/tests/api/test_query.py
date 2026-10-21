@@ -12,6 +12,27 @@ class Service:
 
 
 @pytest.mark.anyio
+async def test_local_frontend_can_preflight_json_query(client_factory):
+    async with client_factory(create_app(Service())) as client:
+        response = await client.options("/api/query", headers={
+            "Origin": "http://localhost:3000",
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "content-type",
+        })
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "http://localhost:3000"
+
+
+@pytest.mark.anyio
+async def test_cors_does_not_allow_unknown_origins(client_factory):
+    async with client_factory(create_app(Service())) as client:
+        response = await client.options("/api/query", headers={
+            "Origin": "https://untrusted.example", "Access-Control-Request-Method": "POST",
+        })
+    assert "access-control-allow-origin" not in response.headers
+
+
+@pytest.mark.anyio
 async def test_query_endpoint_returns_structured_response(client_factory):
     async with client_factory(create_app(Service())) as client:
         response = await client.post("/api/query", json={"question": "找資訊案件"})

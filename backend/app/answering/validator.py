@@ -16,7 +16,8 @@ def validate_answer(draft: DraftAnswer, evidence: EvidenceBundle) -> DraftAnswer
     items = {item.id: item for item in [*evidence.cases, *evidence.documents]}
     citations: list[Citation] = []
     allowed_numbers: set[str] = set()
-    for item in items.values():
+    cited = {citation.evidence_id for citation in draft.citations}
+    for item in (item for key, item in items.items() if key in cited):
         allowed_numbers |= _numbers(item.text)
         allowed_numbers |= _numbers(" ".join(str(value) for value in item.metadata.values() if value is not None))
     for citation in draft.citations:

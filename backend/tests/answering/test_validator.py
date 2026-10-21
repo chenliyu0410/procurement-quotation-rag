@@ -19,6 +19,11 @@ def test_rewriter_keeps_original_and_only_last_two_turns():
     assert rewritten.standalone_question == "2-3-那金額呢？"
 
 
+def test_default_rewriter_retains_filter_context_for_followup():
+    rewritten = QueryRewriter().rewrite("那其中最低呢？", [ChatTurn(role="user", content="資訊服務預算300萬到500萬")])
+    assert "資訊服務預算300萬到500萬" in rewritten.standalone_question
+
+
 def test_validator_rejects_unknown_citation_and_changed_amount():
     with pytest.raises(AnswerValidationError, match="不存在的引用"):
         validate_answer(DraftAnswer(answer="無", citations=[Citation(evidence_id="missing")]), bundle())
@@ -29,3 +34,10 @@ def test_validator_rejects_unknown_citation_and_changed_amount():
 def test_validator_accepts_grounded_answer():
     result = validate_answer(DraftAnswer(answer="決標金額為 100 元", citations=[Citation(evidence_id="case:a")]), bundle())
     assert result.citations[0].source_url == "url"
+
+
+def test_amount_must_be_supported_by_cited_evidence():
+    evidence = bundle()
+    evidence.cases.append(Evidence(id="case:b", kind="case", title="B", text="決標200元", source_url="url"))
+    with pytest.raises(AnswerValidationError):
+        validate_answer(DraftAnswer(answer="A決標200元", citations=[Citation(evidence_id="case:a")]), evidence)

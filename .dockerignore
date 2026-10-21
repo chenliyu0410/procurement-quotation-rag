@@ -1,0 +1,9 @@
+*
+!backend/
+backend/*
+!backend/app/
+!backend/pyproject.toml
+!backend/alembic/
+!backend/alembic.ini
+**/__pycache__
+**/*.pyc
