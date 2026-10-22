@@ -1,8 +1,12 @@
-# 採購 RAG：依教材六層架構
+# 使用者輸入到輸出：完整實際流程
 
-![教材六層對應本專案](diagrams/procurement-rag-six-layers.svg)
+![使用者輸入到輸出的完整流程](diagrams/procurement-rag-full-flow.svg)
 
-本圖依使用者提供的「企業級 RAG 的六層架構」圖片，保留原六層名稱與編號。使用者輸入、使用者輸出置於六層之外；層級由上而下排列為 6、5、4、3、2、1，與教材一致。
+主圖依使用者實際操作與後端執行順序排列，每一步旁標示所屬教材層級。06A／06B／06C 是替代查詢分支，完成後會合，不是三條都要執行。右上角是資料建置流程；左右橘線是直接回應與部分失敗的路徑。
+
+一口氣講完的順序：使用者輸入 → 前端附上有限對話 → API 檢查請求 → 沿用追問背景 → 解析條件及路由 → 選擇 SQL、相似案件或文件路徑 → 視需要分析價格 → 組成證據 → 判斷是否可生成 → LLM 生成 → 引用與數值驗證 → API 回傳 → 前端呈現 → 使用者收到結果。
+
+教材六層名稱與編號保留不變；[六層責任總覽](diagrams/procurement-rag-six-layers.svg)另存供對照，不把六層硬排成每次請求都走過的六個步驟。
 
 六層是責任分層，不是每次提問依序走 1→6 的六個步驟。資料建置與即時查詢分開閱讀：
 
@@ -12,23 +16,33 @@
 
 ```mermaid
 flowchart TB
-    USER([使用者說明需求])
-    OUT([使用者收到結果<br/>摘要、案件、價格狀態、引用與限制])
-    L6[6｜應用與運維管控層<br/>Next.js／FastAPI、對話入口、條件解析與路由<br/>引用驗證、來源狀態、實測評估、錯誤回傳]
-    L5[5｜生成層<br/>LLM API、證據式摘要、結構化引用 ID]
-    L4[4｜檢索增強層<br/>SQL 條件與向量召回、分數排序、過濾<br/>相鄰段落、上下文拼接、價格樣本分析]
-    L3[3｜存儲層<br/>PostgreSQL 結構資料＋Qdrant 向量資料<br/>來源、頁碼、版本與同步紀錄]
-    L2[2｜處理層<br/>清洗、欄位正規化、PDF 解析與切片<br/>Embedding、內容雜湊與增量索引]
-    L1[1｜數據源層<br/>工務局 API、捷運公司 API／CSV<br/>工程會 JP01／JP03 PDF]
-    USER -->|問題與有限對話| L6
-    L6 -->|解析條件並選擇路徑| L4
-    L4 -->|查詢| L3
-    L3 -->|案件與文件證據| L4
-    L4 -->|上下文與後端統計| L5
-    L5 -->|生成結果| L6
-    L6 -->|驗證及整理回應| OUT
-    L1 -. 資料同步 .-> L2
-    L2 -. 建立資料及索引 .-> L3
+    U([01 使用者輸入]) --> WEB[02 前端附上最近兩則對話]
+    WEB --> API[03 API 接收與請求驗證]
+    API --> REWRITE[04 追問沿用背景]
+    REWRITE --> PARSE{05 解析條件與路由}
+    PARSE -->|條件案件| SQL[06A PostgreSQL 參數化條件查詢]
+    PARSE -->|相似案件或價格| VECTOR[06B 問題 embedding → Qdrant 候選200筆<br/>候選ID再套SQL → 按語意分數排序]
+    PARSE -->|文件程序| DOC[06C 問題 embedding → Qdrant 種子3段<br/>前後各1段 → 去重後最多7段]
+    SQL --> PRICE[07 價格問題且有分類時<br/>篩選合格樣本、取Top10、至少5筆才產生區間]
+    VECTOR --> PRICE
+    DOC --> PRICE
+    PRICE --> EVIDENCE[08 整理 EvidenceBundle<br/>案件、文件、統計、來源、頁碼與條件]
+    EVIDENCE --> GATE{09 可以生成？}
+    GATE -->|有證據且未觸發案件價格不足條件| LLM[10 LLM 根據證據生成結構化回答]
+    GATE -->|無證據或案件價格樣本不足| DIRECT[直接回覆限制；保留可用案件]
+    LLM --> VALIDATE[11 驗證引用與數值，還原網址及頁碼]
+    LLM -->|逾時或模型API錯誤| PARTIAL[保留案件與價格狀態，標示partial]
+    VALIDATE -->|通過| RESPONSE[12 API 回傳]
+    VALIDATE -->|未通過| PARTIAL
+    DIRECT --> RESPONSE
+    PARTIAL --> RESPONSE
+    RESPONSE --> VIEW[13 前端顯示摘要、案件表、價格狀態、引用與限制]
+    VIEW --> OUT([14 使用者收到結果，可繼續追問])
+    SOURCE[事前：第1層 官方API／CSV／PDF] -.-> PROCESS[第2層 清洗、解析、切片、向量化]
+    PROCESS -.-> STORE[第3層 PostgreSQL／Qdrant]
+    STORE -. 供查詢 .-> SQL
+    STORE -. 供查詢 .-> VECTOR
+    STORE -. 供查詢 .-> DOC
 ```
 
 | 教材六層 | 本專案已實作 | 對應程式 |

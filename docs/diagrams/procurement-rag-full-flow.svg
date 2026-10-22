@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="3280" viewBox="0 0 2200 3280" role="img" aria-labelledby="title desc">
+<title id="title">採購 RAG：使用者輸入到輸出的完整流程</title>
+<desc id="desc">展開前端、API、對話背景、條件解析、三種檢索路徑、價格分析、證據整理、模型生成、驗證、回應及使用者輸出；另列資料建置與失敗處理。</desc>
+<defs>
+<marker id="main" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#386ca9"/></marker>
+<marker id="warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#a06a23"/></marker>
+<marker id="data" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#329474"/></marker>
+</defs>
+<rect width="2200" height="3280" fill="#f5f7fb"/>
+<text x="48" y="58" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="42" font-weight="700" fill="#263c54">使用者輸入到輸出｜採購 RAG 完整流程</text>
+<text x="48" y="105" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="27" font-weight="400" fill="#62778d">沿藍色箭頭往下讀；06 分成三條查詢路徑，之後會合。步驟旁標示教材所屬層級。</text>
+<rect x="650" y="145" width="900" height="92" rx="18" fill="#123b5d" stroke="#123b5d" stroke-width="2"/>
+<text x="686" y="185" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="32" font-weight="700" fill="#ffffff">01  使用者說明需求</text>
+<text x="686" y="220" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="24" font-weight="400" fill="#e2edf6">例如：找捷運公司預算300萬到1000萬元的案件</text>
+<path d="M1100 237 L1100 274" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<rect x="500" y="280" width="1200" height="128" rx="18" fill="#ffffff" stroke="#d3deea" stroke-width="2"/>
+<text x="526" y="324" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">02  前端接收問題</text>
+<text x="526" y="391" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第6層｜Next.js：QueryForm → queryProcurement</text>
+<text x="526" y="364" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">讀取輸入文字，附上最近兩則對話，送出查詢。</text>
+<path d="M1100 408 L1100 444" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<rect x="500" y="450" width="1200" height="128" rx="18" fill="#ffffff" stroke="#d3deea" stroke-width="2"/>
+<text x="526" y="494" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">03  API 接收並檢查請求</text>
+<text x="526" y="561" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第6層｜FastAPI／QueryRequest；不合法請求回422，前端顯示錯誤</text>
+<text x="526" y="534" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">POST /api/query：檢查問題長度與 history 上限。</text>
+<path d="M1100 578 L1100 614" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<rect x="500" y="620" width="1200" height="128" rx="18" fill="#ffffff" stroke="#d3deea" stroke-width="2"/>
+<text x="526" y="664" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">04  處理追問背景</text>
+<text x="526" y="731" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第6層｜QueryRewriter；目前是規則式背景沿用</text>
+<text x="526" y="704" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">若是「那其中…」等追問，沿用上一則使用者問題形成獨立查詢。</text>
+<path d="M1100 748 L1100 784" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<rect x="500" y="790" width="1200" height="140" rx="18" fill="#ffffff" stroke="#d3deea" stroke-width="2"/>
+<text x="526" y="834" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">05  解析需求，選擇查詢路徑</text>
+<text x="526" y="913" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第6／4層｜QueryParser → RuntimeRetriever</text>
+<text x="526" y="874" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">解析機關、分類、金額、日期；依問題字詞決定下方分支。</text>
+<rect x="1770" y="180" width="385" height="170" rx="18" fill="#eaf5ef" stroke="#d3deea" stroke-width="2"/>
+<text x="1796" y="224" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">事前資料準備</text>
+<text x="1796" y="264" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="23" font-weight="400" fill="#263c54">資料更新時執行，</text>
+<text x="1796" y="301" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="23" font-weight="400" fill="#263c54">不會每次提問重建。</text>
+<rect x="1770" y="385" width="385" height="130" rx="18" fill="#f0f8f3" stroke="#d3deea" stroke-width="2"/>
+<text x="1796" y="429" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">第1層｜數據源層</text>
+<text x="1796" y="469" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="22" font-weight="400" fill="#263c54">官方 API／CSV／PDF</text>
+<path d="M1960 515 L1960 524" fill="none" stroke="#329474" stroke-width="3" marker-end="url(#data)"/>
+<rect x="1770" y="530" width="385" height="130" rx="18" fill="#f0f8f3" stroke="#d3deea" stroke-width="2"/>
+<text x="1796" y="574" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">第2層｜處理層</text>
+<text x="1796" y="614" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="22" font-weight="400" fill="#263c54">下載、欄位正規化</text>
+<text x="1796" y="651" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="22" font-weight="400" fill="#263c54">PDF解析、切片、雜湊</text>
+<path d="M1960 660 L1960 669" fill="none" stroke="#329474" stroke-width="3" marker-end="url(#data)"/>
+<rect x="1770" y="675" width="385" height="130" rx="18" fill="#f0f8f3" stroke="#d3deea" stroke-width="2"/>
+<text x="1796" y="719" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">第2層｜向量化</text>
+<text x="1796" y="759" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="22" font-weight="400" fill="#263c54">建立 embedding</text>
+<text x="1796" y="796" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="22" font-weight="400" fill="#263c54">依版本同步索引</text>
+<path d="M1960 805 L1960 814" fill="none" stroke="#329474" stroke-width="3" marker-end="url(#data)"/>
+<rect x="1770" y="820" width="385" height="130" rx="18" fill="#f0f8f3" stroke="#d3deea" stroke-width="2"/>
+<text x="1796" y="864" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">第3層｜存儲層</text>
+<text x="1796" y="904" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="22" font-weight="400" fill="#263c54">PostgreSQL 案件／來源</text>
+<text x="1796" y="941" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="22" font-weight="400" fill="#263c54">Qdrant 案件／文件向量</text>
+<path d="M1100 930 L1100 980 L365 980 L365 1024" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<path d="M1100 930 L1100 980 L1100 980 L1100 1024" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<path d="M1100 930 L1100 980 L1835 980 L1835 1024" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<rect x="40" y="1030" width="650" height="520" rx="18" fill="#edf4fc" stroke="#d3deea" stroke-width="2"/>
+<text x="66" y="1074" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">06A  條件案件查詢</text>
+<text x="66" y="1533" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第4層檢索 → 第3層存儲</text>
+<text x="66" y="1114" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">不呼叫 embedding。</text>
+<text x="66" y="1151" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">↓</text>
+<text x="66" y="1188" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">PostgreSQL 參數化 SQL</text>
+<text x="66" y="1225" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">套用機關／分類／金額／日期</text>
+<text x="66" y="1262" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">只保留有效案件</text>
+<text x="66" y="1299" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">↓</text>
+<text x="66" y="1336" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">依資料庫順序取得案件</text>
+<text x="66" y="1373" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">最多回傳50筆案件證據</text>
+<rect x="775" y="1030" width="650" height="520" rx="18" fill="#edf4fc" stroke="#d3deea" stroke-width="2"/>
+<text x="801" y="1074" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">06B  相似案件／價格查詢</text>
+<text x="801" y="1533" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第4層檢索 → 第3層存儲</text>
+<text x="801" y="1114" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">問題 → embedding 向量</text>
+<text x="801" y="1151" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">↓</text>
+<text x="801" y="1188" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">Qdrant 搜尋，最多200個候選</text>
+<text x="801" y="1225" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">↓</text>
+<text x="801" y="1262" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">以候選ID再套 SQL 硬條件</text>
+<text x="801" y="1299" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">檢查有效狀態，依相似分數排序</text>
+<text x="801" y="1336" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">↓</text>
+<text x="801" y="1373" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">保留候選供下一步價格篩選</text>
+<rect x="1510" y="1030" width="650" height="520" rx="18" fill="#edf4fc" stroke="#d3deea" stroke-width="2"/>
+<text x="1536" y="1074" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">06C  文件程序問題</text>
+<text x="1536" y="1533" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第4層檢索增強／第3層存儲</text>
+<text x="1536" y="1114" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">問題 → embedding 向量</text>
+<text x="1536" y="1151" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">↓</text>
+<text x="1536" y="1188" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">Qdrant 取得3個種子段落</text>
+<text x="1536" y="1225" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">↓</text>
+<text x="1536" y="1262" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">補入種子前後各1個段落</text>
+<text x="1536" y="1299" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">同文件與版本內去重</text>
+<text x="1536" y="1336" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">↓</text>
+<text x="1536" y="1373" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">最多7個段落保留來源與頁碼</text>
+<path d="M365 1550 L365 1590 L1100 1590 L1100 1624" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<path d="M1100 1550 L1100 1590 L1100 1590 L1100 1624" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<path d="M1835 1550 L1835 1590 L1100 1590 L1100 1624" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<rect x="500" y="1630" width="1200" height="184" rx="18" fill="#ecf6f0" stroke="#d3deea" stroke-width="2"/>
+<text x="526" y="1674" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">07  價格樣本分析（價格問題且已解析分類時）</text>
+<text x="526" y="1797" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第4層｜合格樣本Top10；預算不能替代決標金額</text>
+<text x="526" y="1714" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">同分類、近五年、有日期、決標金額大於零、排除重複，取語意前10筆。</text>
+<text x="526" y="1751" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">合格樣本至少5筆才產生 Q1–Q3；否則標記「樣本不足」。</text>
+<path d="M1100 1814 L1100 1864" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<rect x="500" y="1870" width="1200" height="132" rx="18" fill="#ffffff" stroke="#d3deea" stroke-width="2"/>
+<text x="526" y="1914" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">08  組成這次回答可用的證據</text>
+<text x="526" y="1985" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第4層｜條件案件最多50筆、語意案件最多10筆、文件最多7段</text>
+<text x="526" y="1954" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">整理案件、文件段落、來源／頁碼、價格結果及已執行條件。</text>
+<path d="M1100 2002 L1100 2054" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<rect x="500" y="2060" width="1200" height="170" rx="18" fill="#fff5e7" stroke="#d3deea" stroke-width="2"/>
+<text x="526" y="2104" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">09  判斷是否可以進入模型生成</text>
+<text x="526" y="2213" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第6層｜QueryService；文件證據存在時不被價格字詞誤擋</text>
+<text x="526" y="2144" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">有案件或文件，且沒有觸發案件價格樣本不足的直接回覆條件？</text>
+<text x="526" y="2181" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">通過 → 繼續；不通過 → 左側直接說明限制。</text>
+<rect x="42" y="2050" width="340" height="200" rx="18" fill="#fff5e7" stroke="#d3deea" stroke-width="2"/>
+<text x="68" y="2094" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">直接回應</text>
+<text x="68" y="2134" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400" fill="#263c54">無可引用證據：</text>
+<text x="68" y="2171" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400" fill="#263c54">說明找不到資料。</text>
+<text x="68" y="2208" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400" fill="#263c54">案件價格樣本不足：</text>
+<text x="68" y="2245" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400" fill="#263c54">保留案件，不給區間。</text>
+<path d="M500 2140 L390 2140" fill="none" stroke="#a06a23" stroke-width="3" marker-end="url(#warn)" stroke-dasharray="9 6"/>
+<path d="M212 2250 L212 2760 L494 2760" fill="none" stroke="#a06a23" stroke-width="3" marker-end="url(#warn)" stroke-dasharray="9 6"/>
+<path d="M1100 2230 L1100 2284" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<rect x="500" y="2290" width="1200" height="154" rx="18" fill="#fff4e7" stroke="#d3deea" stroke-width="2"/>
+<text x="526" y="2334" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">10  組合提示與證據，呼叫 LLM</text>
+<text x="526" y="2427" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第5層｜模型 JSON schema 只允許當次 evidence ID</text>
+<text x="526" y="2374" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">送入獨立問題、這次證據與統計；輸出摘要、引用ID、限制。</text>
+<path d="M1100 2444 L1100 2489" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<rect x="500" y="2495" width="1200" height="154" rx="18" fill="#f1eef9" stroke="#d3deea" stroke-width="2"/>
+<text x="526" y="2539" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">11  後端驗證模型回答</text>
+<text x="526" y="2632" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第6層｜通過 → 正常回應；失敗 → 右側保留檢索結果</text>
+<text x="526" y="2579" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">檢查引用ID及數值，正規化金額；還原可信來源網址與文件頁碼。</text>
+<rect x="1780" y="2350" width="375" height="245" rx="18" fill="#fff5e7" stroke="#d3deea" stroke-width="2"/>
+<text x="1806" y="2394" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">例外：保留部分結果</text>
+<text x="1806" y="2434" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400" fill="#263c54">模型逾時／API錯誤，</text>
+<text x="1806" y="2471" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400" fill="#263c54">或回答未通過驗證：</text>
+<text x="1806" y="2508" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400" fill="#263c54">不顯示未驗證草稿；</text>
+<text x="1806" y="2545" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400" fill="#263c54">保留案件及價格狀態，</text>
+<text x="1806" y="2582" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400" fill="#263c54">標記 partial 與限制。</text>
+<path d="M1700 2360 L1774 2360" fill="none" stroke="#a06a23" stroke-width="3" marker-end="url(#warn)" stroke-dasharray="9 6"/>
+<path d="M1700 2570 L1774 2570" fill="none" stroke="#a06a23" stroke-width="3" marker-end="url(#warn)" stroke-dasharray="9 6"/>
+<path d="M1960 2595 L1960 2760 L1706 2760" fill="none" stroke="#a06a23" stroke-width="3" marker-end="url(#warn)" stroke-dasharray="9 6"/>
+<path d="M1100 2649 L1100 2694" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<rect x="500" y="2700" width="1200" height="132" rx="18" fill="#ffffff" stroke="#d3deea" stroke-width="2"/>
+<text x="526" y="2744" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">12  API 整理並回傳結果</text>
+<text x="526" y="2815" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第6層｜正常 ready／模型部分失敗 partial</text>
+<text x="526" y="2784" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">answer、cases、price_reference、citations、limitations、status。</text>
+<path d="M1100 2832 L1100 2884" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<rect x="500" y="2890" width="1200" height="132" rx="18" fill="#ffffff" stroke="#d3deea" stroke-width="2"/>
+<text x="526" y="2934" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="30" font-weight="700" fill="#263c54">13  前端呈現</text>
+<text x="526" y="3005" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="19" font-weight="400" fill="#74859a">教材第6層｜文件連結附 #page=；查詢失敗顯示錯誤提示</text>
+<text x="526" y="2974" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400" fill="#263c54">顯示摘要、預算／決標分欄的案件表、價格狀態、引用及資料限制。</text>
+<path d="M1100 3022 L1100 3064" fill="none" stroke="#386ca9" stroke-width="3" marker-end="url(#main)"/>
+<rect x="530" y="3070" width="1140" height="112" rx="18" fill="#123b5d" stroke="#123b5d" stroke-width="2"/>
+<text x="567" y="3113" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="34" font-weight="700" fill="#ffffff">14  使用者收到可核對的結果</text>
+<text x="567" y="3157" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="27" font-weight="400" fill="#e2edf6">閱讀回答 → 比對案件與來源 → 點開文件頁碼 → 可繼續追問</text>
+<text x="48" y="3245" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="22" font-weight="400" fill="#6a7d92">教材六層：1 數據源｜2 處理｜3 存儲｜4 檢索增強｜5 生成｜6 應用與運維管控。此圖不代表未實作的企業能力已完成。</text>
+</svg>
