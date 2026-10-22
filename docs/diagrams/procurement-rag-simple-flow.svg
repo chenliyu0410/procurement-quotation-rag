@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1470" viewBox="0 0 1800 1470" role="img" aria-labelledby="title desc">
+<title id="title">從提問到答案：採購知識助理白話流程圖</title>
+<desc id="desc">使用者提問後，系統了解需求、查找資料、整理資訊、撰寫回答、檢查來源與數字、清楚呈現結果。旁邊以白話說明教材六層。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#8c9db0"/></marker></defs>
+<rect width="1800" height="1470" fill="#f5f7fb"/>
+<text x="60" y="65" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="42" font-weight="700">使用者提問後，系統做了什麼？</text>
+<text x="60" y="108" fill="#677d94" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="27" font-weight="400">從提出需求，到收到有資料依據的回答。</text>
+<rect x="150" y="155" width="890" height="92" rx="18" fill="#123b5d" stroke="#123b5d" stroke-width="2"/>
+<text x="185" y="193" fill="#ffffff" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="32" font-weight="700">使用者輸入問題</text>
+<text x="185" y="230" fill="#e1ecf5" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="25" font-weight="400">「幫我找捷運公司預算300萬到1000萬元的案件。」</text>
+<path d="M595 247 L595 280" stroke="#8c9db0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="60" y="285" width="1070" height="106" rx="18" fill="#ffffff" stroke="#d7e0eb" stroke-width="2"/>
+<rect x="82" y="307" width="12" height="61" rx="5" fill="#5c8fd2" stroke="#d7e0eb" stroke-width="2"/>
+<text x="120" y="328" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="32" font-weight="700">了解你要找什麼</text>
+<text x="120" y="368" fill="#647b92" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400">看懂你提到的機關、金額和想知道的事情。</text>
+<path d="M595 391 L595 419" stroke="#8c9db0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="60" y="425" width="1070" height="106" rx="18" fill="#ffffff" stroke="#d7e0eb" stroke-width="2"/>
+<rect x="82" y="447" width="12" height="61" rx="5" fill="#3a9d9d" stroke="#d7e0eb" stroke-width="2"/>
+<text x="120" y="468" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="32" font-weight="700">找出相關資料</text>
+<text x="120" y="508" fill="#647b92" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400">到已準備好的採購案件與文件中查找。</text>
+<path d="M595 531 L595 559" stroke="#8c9db0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="60" y="565" width="1070" height="106" rx="18" fill="#ffffff" stroke="#d7e0eb" stroke-width="2"/>
+<rect x="82" y="587" width="12" height="61" rx="5" fill="#3a9d9d" stroke="#d7e0eb" stroke-width="2"/>
+<text x="120" y="608" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="32" font-weight="700">整理有用資訊</text>
+<text x="120" y="648" fill="#647b92" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400">挑出符合條件的資料，整理重要內容。</text>
+<path d="M595 671 L595 699" stroke="#8c9db0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="60" y="705" width="1070" height="106" rx="18" fill="#ffffff" stroke="#d7e0eb" stroke-width="2"/>
+<rect x="82" y="727" width="12" height="61" rx="5" fill="#d6a24f" stroke="#d7e0eb" stroke-width="2"/>
+<text x="120" y="748" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="32" font-weight="700">寫成容易懂的回答</text>
+<text x="120" y="788" fill="#647b92" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400">根據查到的資料，用文字說明結果。</text>
+<path d="M595 811 L595 839" stroke="#8c9db0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="60" y="845" width="1070" height="106" rx="18" fill="#ffffff" stroke="#d7e0eb" stroke-width="2"/>
+<rect x="82" y="867" width="12" height="61" rx="5" fill="#8b73c8" stroke="#d7e0eb" stroke-width="2"/>
+<text x="120" y="888" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="32" font-weight="700">檢查回答與來源</text>
+<text x="120" y="928" fill="#647b92" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400">檢查引用與數字；遇到問題就提示限制。</text>
+<path d="M595 951 L595 979" stroke="#8c9db0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="60" y="985" width="1070" height="106" rx="18" fill="#ffffff" stroke="#d7e0eb" stroke-width="2"/>
+<rect x="82" y="1007" width="12" height="61" rx="5" fill="#5c8fd2" stroke="#d7e0eb" stroke-width="2"/>
+<text x="120" y="1028" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="32" font-weight="700">把結果清楚呈現</text>
+<text x="120" y="1068" fill="#647b92" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400">把答案、案件和資料來源一起顯示。</text>
+<path d="M595 1091 L595 1180" stroke="#8c9db0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="150" y="1185" width="890" height="106" rx="18" fill="#123b5d" stroke="#123b5d" stroke-width="2"/>
+<text x="185" y="1229" fill="#ffffff" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="32" font-weight="700">使用者收到結果</text>
+<text x="185" y="1270" fill="#e1ecf5" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="400">看答案、核對資料，也可以繼續追問。</text>
+<rect x="1180" y="285" width="560" height="1006" rx="18" fill="#eef3f9" stroke="#d7e0eb" stroke-width="2"/>
+<text x="1210" y="335" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="29" font-weight="700">教材六層，白話看</text>
+<rect x="1208" y="367" width="504" height="131" rx="13" fill="#ffffff" stroke="#d7e0eb" stroke-width="2"/>
+<text x="1228" y="400" fill="#788ba1" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="20" font-weight="400">1  數據源層</text>
+<text x="1228" y="439" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="700">資料從哪裡來</text>
+<text x="1228" y="477" fill="#647b92" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400">公開採購案件與採購程序文件。</text>
+<rect x="1208" y="512" width="504" height="131" rx="13" fill="#ffffff" stroke="#d7e0eb" stroke-width="2"/>
+<text x="1228" y="545" fill="#788ba1" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="20" font-weight="400">2  處理層</text>
+<text x="1228" y="584" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="700">先把資料整理好</text>
+<text x="1228" y="622" fill="#647b92" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400">清理格式，拆成方便查找的小段。</text>
+<rect x="1208" y="657" width="504" height="131" rx="13" fill="#ffffff" stroke="#d7e0eb" stroke-width="2"/>
+<text x="1228" y="690" fill="#788ba1" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="20" font-weight="400">3  存儲層</text>
+<text x="1228" y="729" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="700">把整理好的資料保存起來</text>
+<text x="1228" y="767" fill="#647b92" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400">讓之後能查找，也能追溯來源。</text>
+<rect x="1208" y="802" width="504" height="131" rx="13" fill="#ffffff" stroke="#d7e0eb" stroke-width="2"/>
+<text x="1228" y="835" fill="#788ba1" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="20" font-weight="400">4  檢索增強層</text>
+<text x="1228" y="874" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="700">找資料，再挑出有用內容</text>
+<text x="1228" y="912" fill="#647b92" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400">依照問題選資料，補上必要前後文。</text>
+<rect x="1208" y="947" width="504" height="131" rx="13" fill="#ffffff" stroke="#d7e0eb" stroke-width="2"/>
+<text x="1228" y="980" fill="#788ba1" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="20" font-weight="400">5  生成層</text>
+<text x="1228" y="1019" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="700">把找到的內容寫成回答</text>
+<text x="1228" y="1057" fill="#647b92" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400">依據資料，整理成自然的文字。</text>
+<rect x="1208" y="1092" width="504" height="131" rx="13" fill="#ffffff" stroke="#d7e0eb" stroke-width="2"/>
+<text x="1228" y="1125" fill="#788ba1" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="20" font-weight="400">6  應用與運維管控層</text>
+<text x="1228" y="1164" fill="#243951" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="26" font-weight="700">讓大家能提問、查看與核對</text>
+<text x="1228" y="1202" fill="#647b92" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="21" font-weight="400">提供查詢畫面、來源與結果檢查。</text>
+<rect x="60" y="1340" width="1680" height="77" rx="18" fill="#fff4e3" stroke="#ecd9ba" stroke-width="2"/>
+<text x="88" y="1388" fill="#8a642d" font-family="Microsoft JhengHei,Noto Sans CJK TC,sans-serif" font-size="27" font-weight="400">資料不足時，會說明限制；無法產生文字說明時，仍會保留已查到的案件。</text>
+</svg>
