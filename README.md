@@ -13,19 +13,11 @@
 - 價格區間只採同分類、近五年、有效決標金額的語意 Top-10；至少五筆才計算 Q1–Q3。
 - 回答只接受本次 evidence ID，後端檢查引用與數字是否存在於所引用證據；無證據時拒答。這不等同完整的語意事實驗證。
 
-```mermaid
-flowchart LR
-  A[data.taipei CSV / PDF] --> B[ETL 與文件切分]
-  B --> C[(PostgreSQL)]
-  B --> D[(Qdrant 案件)]
-  B --> E[(Qdrant 文件)]
-  F[Next.js] --> G[FastAPI]
-  G --> C
-  G --> D
-  G --> E
-  G --> H[模型 API]
-  G --> I[引用與數值驗證]
-```
+![從使用者需求到結果的六層架構](docs/diagrams/procurement-rag-six-layers.svg)
+
+流程：使用者說明需求 → ①互動與接入 → ②需求理解與路由 → ③資料檢索 → ④證據整合與分析 → ⑤回答生成 → ⑥驗證與回傳 → 結果輸出給使用者。
+
+六層為本專案的邏輯職責分組。資料同步與索引建立屬事前準備；無證據或案件價格樣本不足時，直接回傳限制並略過模型。完整流程、Mermaid 原始碼及程式對應見 [六層架構說明](docs/architecture.md)。
 
 ## 本機啟動
 
