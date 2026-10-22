@@ -1,38 +1,47 @@
-# 從使用者需求到結果：六層架構
+# 採購 RAG：依教材六層架構
 
-![採購 RAG 六層架構](diagrams/procurement-rag-six-layers.svg)
+![教材六層對應本專案](diagrams/procurement-rag-six-layers.svg)
 
-本圖依教材「提問 → 檢索 → 補入上下文 → 生成答案 → 回到使用者」的 RAG 流程概念，將本專案實際職責整理為六層。教材現有架構圖片沒有明列六層名稱，因此以下是本專案的分層命名，不宣稱是教材原文。
+本圖依使用者提供的「企業級 RAG 的六層架構」圖片，保留原六層名稱與編號。使用者輸入、使用者輸出置於六層之外；層級由上而下排列為 6、5、4、3、2、1，與教材一致。
 
-「使用者說明需求」與「結果輸出給使用者」是起點、終點，不列入六層。資料同步與建索引屬事前準備，放在主流程旁邊，也不列入六層。
+六層是責任分層，不是每次提問依序走 1→6 的六個步驟。資料建置與即時查詢分開閱讀：
+
+- **資料建置：** 1 數據源層 → 2 處理層 → 3 存儲層。新增或更新資料時執行。
+- **使用者查詢：** 使用者說明需求 → 6 接入並解析 → 4 檢索增強 → 查詢 3 並取回證據 → 4 組合上下文 → 5 生成 → 6 驗證與呈現 → 使用者收到結果。
+- **例外處理：** 無證據或案件價格樣本不足時，由 6 直接回傳限制而略過 5；模型逾時或驗證失敗時保留已查案件。
 
 ```mermaid
 flowchart TB
-    USER([使用者說明需求<br/>自然語言採購問題／追問])
-    L1[第 1 層｜互動與接入<br/>Next.js 接收輸入及最近兩則對話<br/>FastAPI 接收 POST /api/query]
-    L2[第 2 層｜需求理解與路由<br/>追問背景沿用、條件解析<br/>決定案件／相似案件／文件／價格路徑]
-    L3[第 3 層｜資料檢索<br/>條件案件：PostgreSQL<br/>相似案件：Qdrant 候選再套 SQL<br/>文件：Qdrant 種子段落]
-    L4[第 4 層｜證據整合與分析<br/>文件補前後文、去重、限制 context<br/>價格篩選合格樣本並由後端計算<br/>整理 EvidenceBundle]
-    L5[第 5 層｜回答生成<br/>LLM 根據本次證據產生摘要<br/>結構化輸出限制可引用的 evidence ID]
-    L6[第 6 層｜驗證與回傳<br/>檢查引用及數值、還原來源與頁碼<br/>處理資料不足、模型逾時與驗證失敗<br/>整理 API 回應供前端呈現]
-    RESULT([結果輸出給使用者<br/>回答摘要、案件表、價格狀態<br/>來源引用、文件頁碼、資料限制])
-    PREP[事前資料準備｜不計入六層<br/>官方 API／CSV／PDF<br/>欄位正規化、文件切分、建立 embedding<br/>寫入 PostgreSQL 與 Qdrant]
-    USER --> L1 --> L2 --> L3 --> L4 --> L5 --> L6 --> RESULT
-    PREP -. 已準備的資料與索引 .-> L3
-    L4 -. 無證據，或案件價格樣本不足：略過模型 .-> L6
+    USER([使用者說明需求])
+    OUT([使用者收到結果<br/>摘要、案件、價格狀態、引用與限制])
+    L6[6｜應用與運維管控層<br/>Next.js／FastAPI、對話入口、條件解析與路由<br/>引用驗證、來源狀態、實測評估、錯誤回傳]
+    L5[5｜生成層<br/>LLM API、證據式摘要、結構化引用 ID]
+    L4[4｜檢索增強層<br/>SQL 條件與向量召回、分數排序、過濾<br/>相鄰段落、上下文拼接、價格樣本分析]
+    L3[3｜存儲層<br/>PostgreSQL 結構資料＋Qdrant 向量資料<br/>來源、頁碼、版本與同步紀錄]
+    L2[2｜處理層<br/>清洗、欄位正規化、PDF 解析與切片<br/>Embedding、內容雜湊與增量索引]
+    L1[1｜數據源層<br/>工務局 API、捷運公司 API／CSV<br/>工程會 JP01／JP03 PDF]
+    USER -->|問題與有限對話| L6
+    L6 -->|解析條件並選擇路徑| L4
+    L4 -->|查詢| L3
+    L3 -->|案件與文件證據| L4
+    L4 -->|上下文與後端統計| L5
+    L5 -->|生成結果| L6
+    L6 -->|驗證及整理回應| OUT
+    L1 -. 資料同步 .-> L2
+    L2 -. 建立資料及索引 .-> L3
 ```
 
-| 層級 | 作用 | 對應現有程式 |
+| 教材六層 | 本專案已實作 | 對應程式 |
 | --- | --- | --- |
-| 1. 互動與接入 | 接收問題、有限對話及 API 請求 | `frontend/src/components/QueryForm.tsx`、`frontend/src/app/page.tsx`、`backend/app/api/query.py` |
-| 2. 需求理解與路由 | 沿用追問背景，解析機關、分類、金額、日期；選擇檢索路徑 | `backend/app/answering/query_rewriter.py`、`backend/app/search/query_parser.py`、`backend/app/runtime.py` |
-| 3. 資料檢索 | SQL 條件搜尋、案件向量候選、文件種子段落 | `backend/app/search/case_repository.py`、`backend/app/retrieval/vector_repository.py` |
-| 4. 證據整合與分析 | 相鄰段落、去重與 context 上限；篩選價格樣本、確定性統計 | `backend/app/retrieval/contextual.py`、`backend/app/retrieval/schemas.py`、`backend/app/analysis/pricing.py`、`backend/app/runtime.py` |
-| 5. 回答生成 | 將問題、證據及價格結果送給模型，產生結構化摘要 | `backend/app/answering/openai.py`、`backend/app/answering/provider.py` |
-| 6. 驗證與回傳 | 引用／數值驗證、失敗時保留案件、整理回應並呈現 | `backend/app/answering/validator.py`、`backend/app/answering/service.py`、`frontend/src/components/AnswerPanel.tsx` |
+| 6. 應用與運維管控層 | Web／API、有限對話、需求解析與路由、來源狀態、引用與數值驗證、逾時回退、測試及評測紀錄 | `frontend/src/app/`、`backend/app/api/`、`backend/app/answering/service.py`、`query_rewriter.py`、`validator.py`、`backend/app/search/query_parser.py` |
+| 5. 生成層 | 根據本次證據生成摘要，結構化輸出限制可引用的 evidence ID | `backend/app/answering/openai.py`、`provider.py`、`prompts.py` |
+| 4. 檢索增強層 | 條件 SQL、向量候選再 SQL、相似分數排序、相鄰段落擴展與去重、context 上限、合格價格樣本與確定性統計 | `backend/app/runtime.py`、`backend/app/search/case_repository.py`、`backend/app/retrieval/vector_repository.py`、`contextual.py`、`backend/app/analysis/pricing.py` |
+| 3. 存儲層 | PostgreSQL 案件、來源與同步紀錄；Qdrant 案件及文件向量；保存來源／頁碼／版本等中繼資料 | `backend/app/db/`、`backend/app/retrieval/qdrant.py`、`collections.py` |
+| 2. 處理層 | API／CSV 正規化、民國日期及金額解析、PDF 切分、embedding、內容雜湊、可重跑同步 | `backend/app/ingestion/`、`backend/app/retrieval/embeddings.py`、`backend/app/cli.py` |
+| 1. 數據源層 | 工務局與捷運公開採購資料；工程會兩份程序文件 | README 資料來源、`docs/procedure-sources.json` |
 
-六層是邏輯職責，沒有拆成六個獨立服務；同一個 Python 模組可跨越數層。
+**教材能力與目前實作的界線：** 教材列出企業級完整能力，本作品目前是本機公開資料展示。尚無獨立 reranker、權限控制／權限標籤、正式監控告警及自動知識更新；已提供來源狀態、基本服務健康檢查、測試與人工啟動同步。不能將六層都畫出來解讀為教材每項能力都已實作。
 
-面試講法：「使用者先用自然語言描述需求；第一層接收請求，第二層解析需求並選擇路徑，第三層查資料，第四層整理證據與計算合格的價格統計，第五層請模型生成摘要，第六層驗證並回傳，最後讓使用者看到案件、引用及限制。」
+面試說明：「使用者從第六層的 Web／API 說明需求，系統解析條件後交給第四層查詢第三層。第四層把案件或文件整理成上下文，送第五層生成摘要，再回第六層做引用及數值驗證，最後輸出給使用者。底下的一到三層則是事前把官方資料清洗、切片、向量化並保存的流程。」
 
-說明時須保留的界線：目前路由與追問沿用以規則為主；條件案件可直接查 SQL，不會全部都做 embedding；價格不足會略過模型；模型逾時仍保留案件；引用與數字驗證不等於完整語意正確。圖中不包含尚未實作的完整語意改寫、獨立 reranker 或公開部署。
+六層是邏輯責任，不是六個獨立服務；同一模組可能承擔多層職責。條件案件可直接查 SQL，不會全部都做 embedding；引用與數值驗證不代表完整語意正確。
