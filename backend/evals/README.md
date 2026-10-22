@@ -1,6 +1,8 @@
 # 固定評測集
 
-`questions.jsonl` 鎖定十種查詢情境，所有測量值目前皆為 `null`、`review_status` 為 `pending`。原先預填的 100% 與毫秒數字沒有實際查詢紀錄支持，已移除。
+`questions.jsonl` 鎖定十種查詢情境，原始範本保留 `null` 與 `pending`。原先預填、沒有原始查詢支持的 100% 與毫秒數字已移除。
+
+2026-10-21 已使用原十題、真實模型與現有資料完成一輪本機實測：`local-demo-raw.json` 保存 request／response／evidence／延遲，`local-demo-reviewed.jsonl` 保存作者／代理檢查，`local-demo-review.json` 保存指標、分母與限制。這不是獨立人工驗收；兩題文件語意檢查未通過，Recall@5 仍未量測。詳見 [本機展示說明](../../docs/local-demo.md)。
 
 這個命令是**人工標註彙總器**，不會呼叫模型、不會自動執行題目，也不會判定系統品質達標。`results.json` 中 `null` 表示未量測，`measurement_counts` 顯示實際標註數。零筆標註不會算成 100%。
 

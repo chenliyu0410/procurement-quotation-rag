@@ -1,7 +1,7 @@
 "use client";
 import { FormEvent, useState } from "react";
 
-const examples = ["找出預算 300 萬到 500 萬元的資訊設備案件", "近五年有哪些道路工程決標案件？", "招決標方式如何評估？"];
+const examples = ["找捷運公司預算300萬到1000萬元的案件", "找與「北安抽水站抽水機引擎熱交換器檢修案」相似的案件", "依開標作業程序，開標前應通知哪些人員？"];
 
 export function QueryForm({ onQuery, loading }: { onQuery: (value: string) => void; loading: boolean }) {
   const [question, setQuestion] = useState("");

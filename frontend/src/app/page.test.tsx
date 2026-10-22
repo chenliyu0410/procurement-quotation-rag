@@ -12,7 +12,7 @@ describe("Home", () => {
     ).toBeInTheDocument();
     expect(screen.getByLabelText("輸入採購問題")).toBeInTheDocument();
     expect(
-      screen.getByText("找出預算 300 萬到 500 萬元的資訊設備案件"),
+      screen.getByText("找捷運公司預算300萬到1000萬元的案件"),
     ).toBeInTheDocument();
   });
 });

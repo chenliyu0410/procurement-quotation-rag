@@ -1,0 +1,36 @@
+{
+  "kind": "author_agent_review_not_independent_human_benchmark",
+  "raw_file": "local-demo-raw.json",
+  "sample_count": 10,
+  "metrics": {
+    "structured_accuracy": 1.0,
+    "citation_validity": 1.0,
+    "recall_at_5": null,
+    "groundedness": 0.8,
+    "refusal_accuracy": 1.0,
+    "latency_p95_ms": 6888.7
+  },
+  "measurement_counts": {
+    "structured_accuracy": 3,
+    "citation_validity": 5,
+    "recall_at_5": 0,
+    "groundedness": 10,
+    "refusal_accuracy": 2
+  },
+  "independent_sql_checks": {
+    "amount-range": 0,
+    "dated_awards": 0,
+    "unknown-agency": 0
+  },
+  "reviewer": "Codex author/agent inspection; user has not independently annotated these answers",
+  "failed_semantic_questions": [
+    "procedure",
+    "adjacent"
+  ],
+  "limitations": [
+    "Recall@5 remains null without exhaustive relevance labels.",
+    "Structured checks have no positive dated match and no positive first-question match.",
+    "Citation ID/URL/page consistency does not imply semantic correctness.",
+    "This ten-call P95 is descriptive only; no independent human acceptance or production latency guarantee."
+  ]
+}

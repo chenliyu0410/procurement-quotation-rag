@@ -18,6 +18,12 @@ class QueryService:
     async def query(self, question: str, history: Sequence[ChatTurn]) -> dict[str, Any]:
         rewritten = self.rewriter.rewrite(question, history)
         evidence = await self.retriever.retrieve(rewritten.standalone_question)
+        if not evidence.documents and evidence.price_reference and evidence.price_reference.insufficient_sample:
+            return {"answer": "目前符合條件的可比較案件樣本不足，暫不產生歷史決標金額區間。",
+                    "cases": [item.model_dump(mode="json") for item in evidence.cases],
+                    "price_reference": evidence.price_reference.model_dump(mode="json"), "citations": [],
+                    "limitations": ["價格參考需同分類、近五年且有有效決標金額的足夠樣本；已列案件不一定符合價格樣本條件。"],
+                    "sync_metadata": {"status": "ready"}}
         if not evidence.cases and not evidence.documents:
             return {"answer": "目前資料中找不到足夠證據回答這個問題。", "cases": [], "price_reference": None,
                     "citations": [], "limitations": ["沒有可引用的案件或文件。"], "sync_metadata": {"status": "ready"}}

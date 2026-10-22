@@ -6,8 +6,10 @@ describe("QueryForm", () => {
   it("blocks blanks and fills an example", () => {
     const onQuery = vi.fn(); render(<QueryForm onQuery={onQuery} loading={false}/>);
     expect(screen.getByRole("button", { name: "查詢公開資料" })).toBeDisabled();
-    fireEvent.click(screen.getByRole("button", { name: "近五年有哪些道路工程決標案件？" }));
-    expect(screen.getByLabelText("輸入採購問題")).toHaveValue("近五年有哪些道路工程決標案件？");
+    fireEvent.click(screen.getByRole("button", { name: "找捷運公司預算300萬到1000萬元的案件" }));
+    expect(screen.getByLabelText("輸入採購問題")).toHaveValue("找捷運公司預算300萬到1000萬元的案件");
+    fireEvent.click(screen.getByRole("button", { name: "查詢公開資料" }));
+    expect(onQuery).toHaveBeenCalledWith("找捷運公司預算300萬到1000萬元的案件");
   });
 
   it("disables submission while loading", () => {

@@ -1,0 +1,265 @@
+{
+  "http_status": 200,
+  "url": "http://127.0.0.1:8001/api/query",
+  "latency_ms": 786,
+  "response": {
+    "answer": "目前符合條件的可比較案件樣本不足，暫不產生歷史決標金額區間。",
+    "cases": [
+      {
+        "id": "case:2a565d4b6a32d82a14e64ca942a79699f72d74802300691456a936293ba4a785",
+        "kind": "case",
+        "title": "115年度資訊設備軟硬體委外維護委託資訊服務案",
+        "text": "115年度資訊設備軟硬體委外維護委託資訊服務案；機關：臺北市政府工務局大地工程處；預算：None；決標：770900.00",
+        "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+        "page_number": null,
+        "case_id": "2a565d4b6a32d82a14e64ca942a79699f72d74802300691456a936293ba4a785",
+        "score": 0.5267105,
+        "metadata": {
+          "id": "2a565d4b6a32d82a14e64ca942a79699f72d74802300691456a936293ba4a785",
+          "agency": "臺北市政府工務局大地工程處",
+          "case_name": "115年度資訊設備軟硬體委外維護委託資訊服務案",
+          "category": "資訊服務",
+          "budget_amount": null,
+          "award_amount": "770900.00",
+          "announcement_date": null,
+          "expected_tender_date": null,
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "source_period": "2026-05",
+          "category_normalized": "資訊服務"
+        }
+      },
+      {
+        "id": "case:60f5b30ad4c6495d24cfc302518b4bb781de2d2f842ed08415c463046ee2f1c7",
+        "kind": "case",
+        "title": "114年度資通安全維運及資訊設備維護委外服務案",
+        "text": "114年度資通安全維運及資訊設備維護委外服務案；機關：臺北市政府工務局；預算：None；決標：1470000.00",
+        "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+        "page_number": null,
+        "case_id": "60f5b30ad4c6495d24cfc302518b4bb781de2d2f842ed08415c463046ee2f1c7",
+        "score": 0.5068483,
+        "metadata": {
+          "id": "60f5b30ad4c6495d24cfc302518b4bb781de2d2f842ed08415c463046ee2f1c7",
+          "agency": "臺北市政府工務局",
+          "case_name": "114年度資通安全維運及資訊設備維護委外服務案",
+          "category": "資訊服務",
+          "budget_amount": null,
+          "award_amount": "1470000.00",
+          "announcement_date": null,
+          "expected_tender_date": null,
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "source_period": "2026-05",
+          "category_normalized": "資訊服務"
+        }
+      },
+      {
+        "id": "case:104b9107ce3cf659c7a1604099900155a696f0a8104389ce2b1184f557163c81",
+        "kind": "case",
+        "title": "114年度容積代金基金採購私有公共設施保留地線上投標系統功能擴充暨維護案",
+        "text": "114年度容積代金基金採購私有公共設施保留地線上投標系統功能擴充暨維護案；機關：臺北市政府工務局新建工程處；預算：None；決標：1250000.00",
+        "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+        "page_number": null,
+        "case_id": "104b9107ce3cf659c7a1604099900155a696f0a8104389ce2b1184f557163c81",
+        "score": 0.5058693,
+        "metadata": {
+          "id": "104b9107ce3cf659c7a1604099900155a696f0a8104389ce2b1184f557163c81",
+          "agency": "臺北市政府工務局新建工程處",
+          "case_name": "114年度容積代金基金採購私有公共設施保留地線上投標系統功能擴充暨維護案",
+          "category": "資訊服務",
+          "budget_amount": null,
+          "award_amount": "1250000.00",
+          "announcement_date": null,
+          "expected_tender_date": null,
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "source_period": "2026-05",
+          "category_normalized": "資訊服務"
+        }
+      },
+      {
+        "id": "case:8b47853779db64eda09b654dcf2f6c7800328a95cb51fc28df5e4016b91fbbae",
+        "kind": "case",
+        "title": "114年度資訊設備維護及耗材採購案",
+        "text": "114年度資訊設備維護及耗材採購案；機關：臺北市政府工務局水利工程處；預算：None；決標：1190000.00",
+        "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+        "page_number": null,
+        "case_id": "8b47853779db64eda09b654dcf2f6c7800328a95cb51fc28df5e4016b91fbbae",
+        "score": 0.49665868,
+        "metadata": {
+          "id": "8b47853779db64eda09b654dcf2f6c7800328a95cb51fc28df5e4016b91fbbae",
+          "agency": "臺北市政府工務局水利工程處",
+          "case_name": "114年度資訊設備維護及耗材採購案",
+          "category": "資訊服務",
+          "budget_amount": null,
+          "award_amount": "1190000.00",
+          "announcement_date": null,
+          "expected_tender_date": null,
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "source_period": "2026-05",
+          "category_normalized": "資訊服務"
+        }
+      },
+      {
+        "id": "case:6a54dd23c3650ee1f2399ccae759b68dcd49fbd73e3c4b8e9a9799ec2fed6053",
+        "kind": "case",
+        "title": "115年度臺北市政府工務局道管中心網路通訊防火牆設備租賃服務案",
+        "text": "115年度臺北市政府工務局道管中心網路通訊防火牆設備租賃服務案；機關：臺北市政府工務局；預算：None；決標：178500.00",
+        "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+        "page_number": null,
+        "case_id": "6a54dd23c3650ee1f2399ccae759b68dcd49fbd73e3c4b8e9a9799ec2fed6053",
+        "score": 0.48773083,
+        "metadata": {
+          "id": "6a54dd23c3650ee1f2399ccae759b68dcd49fbd73e3c4b8e9a9799ec2fed6053",
+          "agency": "臺北市政府工務局",
+          "case_name": "115年度臺北市政府工務局道管中心網路通訊防火牆設備租賃服務案",
+          "category": "資訊服務",
+          "budget_amount": null,
+          "award_amount": "178500.00",
+          "announcement_date": null,
+          "expected_tender_date": null,
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "source_period": "2026-05",
+          "category_normalized": "資訊服務"
+        }
+      },
+      {
+        "id": "case:b897c139b4ab818bbf4b4e5d1c58ad6d930684edeb3a314075f84cbe84dbc7b7",
+        "kind": "case",
+        "title": "114年工程履約管理資訊系統維護案",
+        "text": "114年工程履約管理資訊系統維護案；機關：臺北市政府工務局；預算：None；決標：820000.00",
+        "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+        "page_number": null,
+        "case_id": "b897c139b4ab818bbf4b4e5d1c58ad6d930684edeb3a314075f84cbe84dbc7b7",
+        "score": 0.47921765,
+        "metadata": {
+          "id": "b897c139b4ab818bbf4b4e5d1c58ad6d930684edeb3a314075f84cbe84dbc7b7",
+          "agency": "臺北市政府工務局",
+          "case_name": "114年工程履約管理資訊系統維護案",
+          "category": "資訊服務",
+          "budget_amount": null,
+          "award_amount": "820000.00",
+          "announcement_date": null,
+          "expected_tender_date": null,
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "source_period": "2026-05",
+          "category_normalized": "資訊服務"
+        }
+      },
+      {
+        "id": "case:11041f90d89648341c1065847495925042611eb9d37c90ee9721dec4b8386ce1",
+        "kind": "case",
+        "title": "「臺北市政府工務局道管中心網路通訊防火牆設備租賃服務案」第1次契約變更",
+        "text": "「臺北市政府工務局道管中心網路通訊防火牆設備租賃服務案」第1次契約變更；機關：臺北市政府工務局；預算：None；決標：175000.00",
+        "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+        "page_number": null,
+        "case_id": "11041f90d89648341c1065847495925042611eb9d37c90ee9721dec4b8386ce1",
+        "score": 0.4762621,
+        "metadata": {
+          "id": "11041f90d89648341c1065847495925042611eb9d37c90ee9721dec4b8386ce1",
+          "agency": "臺北市政府工務局",
+          "case_name": "「臺北市政府工務局道管中心網路通訊防火牆設備租賃服務案」第1次契約變更",
+          "category": "資訊服務",
+          "budget_amount": null,
+          "award_amount": "175000.00",
+          "announcement_date": null,
+          "expected_tender_date": null,
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "source_period": "2026-05",
+          "category_normalized": "資訊服務"
+        }
+      },
+      {
+        "id": "case:3597ba787d3bd09fbd1610f06a1d9226de1c5fc743b297b3c1b2283da180ece6",
+        "kind": "case",
+        "title": "113年電腦及周邊設備維護案-第2次契約變更",
+        "text": "113年電腦及周邊設備維護案-第2次契約變更；機關：臺北市政府工務局公園路燈工程管理處；預算：None；決標：504000.00",
+        "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+        "page_number": null,
+        "case_id": "3597ba787d3bd09fbd1610f06a1d9226de1c5fc743b297b3c1b2283da180ece6",
+        "score": 0.46563315,
+        "metadata": {
+          "id": "3597ba787d3bd09fbd1610f06a1d9226de1c5fc743b297b3c1b2283da180ece6",
+          "agency": "臺北市政府工務局公園路燈工程管理處",
+          "case_name": "113年電腦及周邊設備維護案-第2次契約變更",
+          "category": "資訊服務",
+          "budget_amount": null,
+          "award_amount": "504000.00",
+          "announcement_date": null,
+          "expected_tender_date": null,
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "source_period": "2026-05",
+          "category_normalized": "資訊服務"
+        }
+      },
+      {
+        "id": "case:3227bfa89bfa375f0efe018a5c6f128b4ac4c7de3b5a638accc175058a95d177",
+        "kind": "case",
+        "title": "113年度政府採購業務管理系統功能擴增計畫第2次契約變更",
+        "text": "113年度政府採購業務管理系統功能擴增計畫第2次契約變更；機關：臺北市政府工務局；預算：None；決標：199547.00",
+        "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+        "page_number": null,
+        "case_id": "3227bfa89bfa375f0efe018a5c6f128b4ac4c7de3b5a638accc175058a95d177",
+        "score": 0.4655521,
+        "metadata": {
+          "id": "3227bfa89bfa375f0efe018a5c6f128b4ac4c7de3b5a638accc175058a95d177",
+          "agency": "臺北市政府工務局",
+          "case_name": "113年度政府採購業務管理系統功能擴增計畫第2次契約變更",
+          "category": "資訊服務",
+          "budget_amount": null,
+          "award_amount": "199547.00",
+          "announcement_date": null,
+          "expected_tender_date": null,
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "source_period": "2026-05",
+          "category_normalized": "資訊服務"
+        }
+      },
+      {
+        "id": "case:b951a21ccb96017aee53a8eccc5db651c81387209fa0bce2c1ce6c9218ca1b11",
+        "kind": "case",
+        "title": "114年度資訊設備及主機房委託維護服務案",
+        "text": "114年度資訊設備及主機房委託維護服務案；機關：臺北市政府工務局衛生下水道工程處；預算：None；決標：2665706.00",
+        "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+        "page_number": null,
+        "case_id": "b951a21ccb96017aee53a8eccc5db651c81387209fa0bce2c1ce6c9218ca1b11",
+        "score": 0.46539673,
+        "metadata": {
+          "id": "b951a21ccb96017aee53a8eccc5db651c81387209fa0bce2c1ce6c9218ca1b11",
+          "agency": "臺北市政府工務局衛生下水道工程處",
+          "case_name": "114年度資訊設備及主機房委託維護服務案",
+          "category": "資訊服務",
+          "budget_amount": null,
+          "award_amount": "2665706.00",
+          "announcement_date": null,
+          "expected_tender_date": null,
+          "source_url": "https://data.taipei/api/v1/dataset/a064da04-bfe4-4677-a04e-fe95eeb81fa3?scope=resourceAquire",
+          "source_period": "2026-05",
+          "category_normalized": "資訊服務"
+        }
+      }
+    ],
+    "price_reference": {
+      "sample_count": 0,
+      "minimum": null,
+      "q1": null,
+      "median": null,
+      "q3": null,
+      "maximum": null,
+      "insufficient_sample": true,
+      "case_ids": [],
+      "exclusions": {
+        "outside_date_window": 200
+      }
+    },
+    "citations": [],
+    "limitations": [
+      "價格參考需同分類、近五年且有有效決標金額的足夠樣本；已列案件不一定符合價格樣本條件。"
+    ],
+    "sync_metadata": {
+      "status": "ready"
+    }
+  },
+  "browser_checks": [
+    "Budget query showed seven cases",
+    "Procedure query showed page 1 and page 2 links",
+    "Sources page showed 1043/52/12/10"
+  ]
+}

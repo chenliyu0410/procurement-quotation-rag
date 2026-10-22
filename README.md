@@ -2,7 +2,7 @@
 
 以臺北市資料大平臺公開採購資料建立的作品集 RAG 專案。系統將可驗證的 SQL 條件查詢、Qdrant 語意搜尋、採購文件問答與歷史決標金額統計放在同一個介面，回答中的案件、金額與文件頁碼都必須能追溯來源。
 
-目前已匯入並索引工務局 1,043 筆決標紀錄、捷運公司 52 筆預算案件，以及工程會兩份採購程序文件的 22 個段落。真實模型已通過相似案件、捷運預算篩選及文件頁碼引用的少量實測，紀錄見 [案件測試](backend/evals/live-case-smoke.json)與[預算／文件測試](backend/evals/live-metro-procedure-smoke.json)。正式十題人工評測、有日期的價格樣本及公開部署仍待完成。詳細交接見 [docs/progress.md](docs/progress.md)。
+目前已匯入並索引工務局 1,043 筆決標紀錄、捷運公司 52 筆預算案件，以及工程會兩份採購程序文件的 22 個段落。本機展示已啟動，見[啟動與驗收說明](docs/local-demo.md)及[五分鐘展示流程](docs/demo-script.md)。原十題已完成真實呼叫與作者／代理檢查，兩題文件問題未通過語意檢查；獨立人工驗收、完整相關標註、有日期的價格樣本及公開部署仍待完成。詳細交接見 [docs/progress.md](docs/progress.md)。
 
 ## 能力展示
 
@@ -106,7 +106,7 @@ cd ../frontend && npm test -- --run && npm run build
 cd .. && docker compose --profile app config --quiet
 ```
 
-固定題庫包含 10 題，涵蓋金額與日期、相似案件、價格統計、文件問答、對話與拒答。runner 只彙總人工標註，不會執行查詢；未量測欄位輸出 `null`，並顯示每項指標的標註筆數。尚無真實品質或延遲數字，不能宣稱 100% 正確率。操作方式見 [backend/evals/README.md](backend/evals/README.md)。公開展示 P95 目標低於 10 秒，尚未驗證。
+固定題庫包含 10 題，涵蓋金額與日期、相似案件、價格統計、文件問答、對話與拒答。runner 只彙總標註，不會執行查詢；未量測欄位輸出 `null`，並顯示每項指標的標註筆數。本機真實十題紀錄及作者／代理檢查見 [local-demo-review.json](backend/evals/local-demo-review.json)：groundedness 8/10，尚未達原定門檻，Recall@5 未量測；十次呼叫的延遲不能代表正式公開服務 P95。操作方式見 [backend/evals/README.md](backend/evals/README.md)。
 
 GitHub Actions 會執行後端測試、前端測試、正式建置、Compose 設定驗證與後端 image build；CI 不需模型金鑰。
 
